@@ -4,6 +4,11 @@ from PIL import ImageTk, Image
 
 def home():
 
+    def exit_and_open_singleplayer():
+        win.destroy()
+        from Singleplayer import open_singleplayer
+        open_singleplayer()
+
     win = tk.Tk()
     win.title("Quicket")
     win.geometry('500x750')
@@ -35,7 +40,7 @@ def home():
     play_mode.grid(row=2, column=1)
 
     photo1 = tk.PhotoImage(file=r'images\home\singleplayer.png')
-    btn1 = Button(win, image=photo1, style='A.TButton', command=None) # here, this button shud take us to the login/signup screen
+    btn1 = Button(win, image=photo1, style='A.TButton', command=exit_and_open_singleplayer)
     btn1.grid(row=3, column=1)
 
     photo2 = tk.PhotoImage(file=r'images\home\multiplayer.png')
