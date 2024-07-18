@@ -52,7 +52,8 @@ def open_singleplayer():
                             for row in name_reader:
                                 if row[1] == username:
                                     name = row[0]
-                                    #singleplayer game window
+                                    from Singleplayer_start import start_match_singleplayer as start
+                                    start(name, username)
                     else:
                         print("wrong password")
                         tk.messagebox.showerror("Incorrect password", "Please try again")
