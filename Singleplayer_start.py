@@ -27,17 +27,14 @@ def start_match_singleplayer(name, username):
         sm.destroy()
         from Home_screen import home
         home()
-    
-    def shop():
-        sm.destroy()
-        #shop window call
+
 
     photo3 = tk.PhotoImage(file=r'images\singleplayer_start\home1.png')
     btn3 = tk.Button(sm, image=photo3, command=go_home, borderwidth=0)
     btn3.grid(row=0, column=0, padx = 0)
 
     photo4 = tk.PhotoImage(file=r'images\singleplayer_start\shop.png')
-    btn4 = tk.Button(sm, image=photo4, command=shop, borderwidth=0)
+    btn4 = tk.Button(sm, image=photo4, command=None, borderwidth=0) #button for shop window
     btn4.grid(row=0, column=3, pady = 10)
 
     player_info = tk.Frame(sm)
@@ -92,5 +89,84 @@ def start_match_singleplayer(name, username):
     wicket_keepers_value = Label(wic, text=wicket_keepers_owned, background='light grey', font=('Times New Roman', 30, 'bold'))
     wicket_keepers_value.grid(row=1, column=0)
 
+    all = tk.Frame(player_info, highlightbackground="black", highlightthickness=6)
+    all.config(background="grey")
+    all.grid(row=0, column=3, pady = 20)
+    all_rounders = Label(all, text='All Rounders', background='grey', font=('Times New Roman', 20, 'bold'))
+    all_rounders.grid(row=0, column=0)
+    all_rounders_value = Label(all, text=all_rounders_owned, background='grey', font=('Times New Roman', 30, 'bold'))
+    all_rounders_value.grid(row=1, column=0)
+
+    wice = tk.Frame(player_info, highlightbackground="black", highlightthickness=6)
+    wice.config(background="light grey")
+    wice.grid(row=0, column=4, pady = 20)
+    wickets_label = Label(wice, text='Wickets', background='light grey', font=('Times New Roman', 20, 'bold'))
+    wickets_label.grid(row=0, column=0)
+    wickets_value = Label(wice, text=wickets, background='light grey', font=('Times New Roman', 30, 'bold'))
+    wickets_value.grid(row=1, column=0)
+
+    run = tk.Frame(player_info, highlightbackground="black", highlightthickness=6)
+    run.config(background="grey")
+    run.grid(row=1, column=0, pady = 20)
+    runs_label = Label(run, text='Runs', background='grey', font=('Times New Roman', 20, 'bold'))
+    runs_label.grid(row=0, column=0)
+    runs_value = Label(run, text=runs, background='grey', font=('Times New Roman', 30, 'bold'))
+    runs_value.grid(row=1, column=0)
+
+    eco = tk.Frame(player_info, highlightbackground="black", highlightthickness=6)
+    eco.config(background="light grey")
+    eco.grid(row=1, column=1)
+    economy_label = Label(eco, text='Net R.R.', background='light grey', font=('Times New Roman', 20, 'bold'))
+    economy_label.grid(row=0, column=0)
+    economy_value = Label(eco, text=economy, background='light grey', font=('Times New Roman', 30, 'bold'))
+    economy_value.grid(row=1, column=0)
+
+    tot = tk.Frame(player_info, highlightbackground="black", highlightthickness=6)
+    tot.config(background="grey")
+    tot.grid(row=1, column=2)
+    total_overs_label = Label(tot, text='Total Overs', background='grey', font=('Times New Roman', 20, 'bold'))
+    total_overs_label.grid(row=0, column=0)
+    total_overs_value = Label(tot, text=total_overs, background='grey', font=('Times New Roman', 30, 'bold'))
+    total_overs_value.grid(row=1, column=0)
+
+    batt = tk.Frame(player_info, highlightbackground="black", highlightthickness=6)
+    batt.config(background="light grey")
+    batt.grid(row=1, column=3)
+    batting_avg = Label(batt, text='Games Won', background='light grey', font=('Times New Roman', 20, 'bold'))
+    batting_avg.grid(row=0, column=0)
+    batting_avg_value = Label(batt, text=batting_average, background='light grey', font=('Times New Roman', 30, 'bold'))
+    batting_avg_value.grid(row=1, column=0)
+
+    bowl = tk.Frame(player_info, highlightbackground="black", highlightthickness=6)
+    bowl.config(background="grey")
+    bowl.grid(row=1, column=4)
+    bowling_avg = Label(bowl, text='Games lost', background='grey', font=('Times New Roman', 20, 'bold'))
+    bowling_avg.grid(row=0, column=0)
+    bowling_avg_value = Label(bowl, text=bowling_average, background='grey', font=('Times New Roman', 30, 'bold'))
+    bowling_avg_value.grid(row=1, column=0)
+
+    inn = tk.Frame(player_info, highlightbackground="black", highlightthickness=6)
+    inn.config(background="light grey")
+    inn.grid(row=2, column=2)
+    innings_label = Label(inn, text='Matches', background='light grey', font=('Times New Roman', 20, 'bold'))
+    innings_label.grid(row=0, column=0)
+    innings_value = Label(inn, text=innings, background='light grey', font=('Times New Roman', 30, 'bold'))
+    innings_value.grid(row=1, column=0)
+
+    game_start = tk.Frame(sm)
+    game_start.grid(row=2, column=1)
+
+    overs_var=tk.StringVar()
+
+
+    name_label = tk.Label(game_start, text = 'Select number of overs:', font=('calibre',21, 'bold'))
+    name_label.grid(row=0, column=0, padx=20)
+    over_options = [2, 3, 4]
+    over_select = Combobox(game_start, textvariable=overs_var, values=over_options, state="readonly", font=('calibre',21,'bold'))
+    over_select.grid(row=0, column=1, padx=20)
+
+    start_img = tk.PhotoImage(file=r'images\singleplayer_start\start.png')
+    login_button=tk.Button(game_start,image=start_img, command = None, borderwidth=0) #button to open game
+    login_button.grid(row=0, column=2)
 
     sm.mainloop()
