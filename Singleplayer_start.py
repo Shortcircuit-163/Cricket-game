@@ -27,14 +27,18 @@ def start_match_singleplayer(name, username):
         sm.destroy()
         from Home_screen import home
         home()
-
+    
+    def shop():
+        sm.destroy()
+        from Shop import shop
+        shop(name, username)
 
     photo3 = tk.PhotoImage(file=r'images\singleplayer_start\home1.png')
     btn3 = tk.Button(sm, image=photo3, command=go_home, borderwidth=0)
     btn3.grid(row=0, column=0, padx = 0)
 
     photo4 = tk.PhotoImage(file=r'images\singleplayer_start\shop.png')
-    btn4 = tk.Button(sm, image=photo4, command=None, borderwidth=0) #button for shop window
+    btn4 = tk.Button(sm, image=photo4, command=shop, borderwidth=0)
     btn4.grid(row=0, column=3, pady = 10)
 
     player_info = tk.Frame(sm)
