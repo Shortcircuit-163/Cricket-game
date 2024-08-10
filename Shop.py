@@ -29,7 +29,19 @@ def shop_scr(name, username):
 
 
             #BUYING THE PLAYER
-            def buy_player(player_name, player_price, player_role, bat, bowl):
+            def buy_player(username, player_name, player_price, player_role, bat, bowl):
+
+                playerdata = r'Data\users\player_data_' + username + '.csv'
+                with open(playerdata, 'r') as f:
+                    player_reader = csv.reader(f, delimiter=',')
+                    for row in player_reader:
+                        if row[0] == 'players':
+                            continue
+                        else:
+                            if row[0] == player_name:
+                                print("player already exists in team")
+                                tk.messagebox.showerror("Purchase Error", "Player already exists in team")
+                                return
                 
                 #convert from 'M' or 'K' to integer
                 def convert_currency_num(value):
@@ -138,7 +150,7 @@ def shop_scr(name, username):
             # Function to create a tab
             def create_tab(tab, path, ptype):
 
-                canvas = Canvas(tab)
+                canvas = Canvas(tab, background='light grey')
                 canvas.pack(side=LEFT, fill=BOTH, expand=True)
                 
                 scrollbar = Scrollbar(tab, orient=VERTICAL, command=canvas.yview)
@@ -147,7 +159,7 @@ def shop_scr(name, username):
                 canvas.configure(yscrollcommand=scrollbar.set)
                 canvas.bind('<Configure>', lambda e: canvas.configure(scrollregion=canvas.bbox("all")))
                 
-                scr_frame = Frame(canvas)
+                scr_frame = tk.Frame(canvas, background='light grey')
                 canvas.create_window((0, 0), window=scr_frame, anchor="nw")
 
                 photo4 = tk.PhotoImage(file=r'images\singleplayer_start\home1.png')                
@@ -155,7 +167,7 @@ def shop_scr(name, username):
                 btn3.photo = photo4  # Keep a reference to avoid garbage collection
                 btn3.grid(row=0, column=0, sticky=W, padx=10, pady=10)
 
-                balance_frame = tk.Frame(scr_frame)
+                balance_frame = tk.Frame(scr_frame, background='light grey')
                 balance_frame.grid(row=0, column=1)
                 balance_label = tk.Label(balance_frame, text='Balance:', background='dark grey', font=('Times New Roman', 20, 'bold'))
                 balance_label.grid(row=0, column=0)
@@ -205,22 +217,22 @@ def shop_scr(name, username):
                     row = (idx // 3) + 1  # Start placing images from row 1 to avoid overlapping with the home button
                     col = idx % 3
 
-                    frame = Frame(scr_frame)
+                    frame = tk.Frame(scr_frame, background='light grey')
                     frame.grid(row=row, column=col, padx=10, pady=10)
 
-                    label = Label(frame, image=img_tk)
+                    label = Label(frame, image=img_tk, background='light grey')
                     label.image = img_tk
                     label.pack()
 
                     name, price, role, bat, bowl = get_names_pstats(img_no, ptype)
-                    purchase_text = Label(frame, text=name, font=('Roboto Mono', 10, 'bold'))
+                    purchase_text = Label(frame, text=name, font=('Roboto Mono', 10, 'bold'), background='light grey')
                     purchase_text.pack()
 
-                    price_text = Label(frame, text=price, font=('Roboto Mono', 10, 'bold'))
+                    price_text = Label(frame, text=price, font=('Roboto Mono', 10, 'bold'), background='light grey')
                     price_text.pack()
 
                     buy_photo = tk.PhotoImage(file=r'images\shop\buy.png')
-                    buy_btn = Button(frame, image=buy_photo, style='A.TButton', command=lambda n=name, p=price, r=role, b=bat, bo=bowl: buy_player(n, p, r,b,bo))
+                    buy_btn = Button(frame, image=buy_photo, style='A.TButton', command=lambda u=username, n=name, p=price, r=role, b=bat, bo=bowl: buy_player(u, n, p, r,b,bo))
                     buy_btn.image = buy_photo  # Keep a reference to avoid garbage collection
                     buy_btn.pack()
 

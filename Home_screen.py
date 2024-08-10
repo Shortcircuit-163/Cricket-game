@@ -1,6 +1,8 @@
 import tkinter as tk
+from tkinter import *
 from tkinter.ttk import *
 from PIL import ImageTk, Image
+from tkinter import messagebox
 
 def home():
 
@@ -12,7 +14,7 @@ def home():
 
     win = tk.Tk()
     win.title("Quicket")
-    win.geometry('500x750')
+    win.geometry('470x750')
     win.resizable(False, False)
     win.configure(background='light grey')
     p1 = tk.PhotoImage(file=r'images\home\quicket.png')
