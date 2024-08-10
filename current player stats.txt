@@ -1,0 +1,4 @@
+bat       17
+bowl      16 
+wk         6
+all       15

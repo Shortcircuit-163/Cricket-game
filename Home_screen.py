@@ -4,6 +4,7 @@ from PIL import ImageTk, Image
 
 def home():
 
+
     def exit_and_open_singleplayer():
         win.destroy()
         from Singleplayer import open_singleplayer

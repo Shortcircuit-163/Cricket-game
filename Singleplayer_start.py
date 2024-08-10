@@ -30,8 +30,8 @@ def start_match_singleplayer(name, username):
     
     def shop():
         sm.destroy()
-        from Shop import shop
-        shop(name, username)
+        from Shop import shop_scr
+        shop_scr(name, username)
 
     photo3 = tk.PhotoImage(file=r'images\singleplayer_start\home1.png')
     btn3 = tk.Button(sm, image=photo3, command=go_home, borderwidth=0)
@@ -162,6 +162,11 @@ def start_match_singleplayer(name, username):
 
     overs_var=tk.StringVar()
 
+    def open_game():
+        sm.destroy()
+        from Game_window import game
+        overs=overs_var.get()
+        game(username, overs)
 
     name_label = tk.Label(game_start, text = 'Select number of overs:', font=('calibre',21, 'bold'))
     name_label.grid(row=0, column=0, padx=20)
@@ -170,7 +175,11 @@ def start_match_singleplayer(name, username):
     over_select.grid(row=0, column=1, padx=20)
 
     start_img = tk.PhotoImage(file=r'images\singleplayer_start\start.png')
-    login_button=tk.Button(game_start,image=start_img, command = None, borderwidth=0) #button to open game
+    login_button=tk.Button(game_start,image=start_img, command = open_game, borderwidth=0)
     login_button.grid(row=0, column=2)
 
     sm.mainloop()
+
+# Batsmen owned,Bowlers owned,wicket keepers owned,all rounders owned,Wickets,Runs,Economy,Innings,
+# Batting Average,Bowling Average,Batting Overs,Bowling Overs,Total Overs
+#start = start_img.subsample(5, 5)

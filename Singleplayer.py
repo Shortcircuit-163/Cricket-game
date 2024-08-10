@@ -9,7 +9,7 @@ def open_singleplayer():
         sp.destroy()
         from Signup import signup_window
         signup_window()
-
+    
     sp = tk.Tk()
     sp.title("Quicket-Singleplayer")
     sp.geometry('650x800')
@@ -101,7 +101,7 @@ def open_singleplayer():
 
     signup = tk.PhotoImage(file=r'images\singleplayer\signup.png')
     signup_btn = signup.subsample(2, 2)
-    signup_button=tk.Button(signup_frame,image=signup_btn, command=close_and_signup, borderwidth=0)
+    signup_button=tk.Button(signup_frame,image=signup_btn, command = close_and_signup, borderwidth=0)
     signup_button.grid(row=1, column=1, pady=30)
 
 
