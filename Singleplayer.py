@@ -65,7 +65,7 @@ def open_singleplayer():
                 
                     
     user_pass_frame = tk.Frame(sp, background='light grey')
-    user_pass_frame.grid(row=2, column=1, pady =30)
+    user_pass_frame.grid(row=2, column=1, pady =20)
 
 
     name_label = tk.Label(user_pass_frame, text = 'Username:', font=('calibre',20, 'bold'), background='light grey')
@@ -106,7 +106,7 @@ def open_singleplayer():
     signup = tk.PhotoImage(file=r'images\singleplayer\signup.png')
     signup_btn = signup.subsample(2, 2)
     signup_button=tk.Button(signup_frame,image=signup_btn, command = close_and_signup, borderwidth=0, background='light grey')
-    signup_button.grid(row=1, column=1, pady=30)
+    signup_button.grid(row=1, column=1, pady=20)
 
 
     sp.mainloop()

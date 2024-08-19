@@ -8,7 +8,7 @@ def start_match_singleplayer(name, username):
 
     sm = tk.Tk()
     sm.title("Quicket-Start Match")
-    sm.geometry('1000x700')
+    sm.geometry('1300x700')
     # sm.resizable(False, False)
     sm.configure(background='light grey')
     p1 = tk.PhotoImage(file=r'images\home\quicket.png')
@@ -29,6 +29,10 @@ def start_match_singleplayer(name, username):
         from Shop import shop_scr
         shop_scr(name, username)
 
+    def go_to_squad():
+        sm.destroy()
+        from Squad import squad_scr
+        squad_scr(name, username)
 
     photo3 = tk.PhotoImage(file=r'images\singleplayer_start\home1.png')
     btn3 = tk.Button(sm, image=photo3, command=go_home, borderwidth=0, background='light grey')
@@ -45,7 +49,7 @@ def start_match_singleplayer(name, username):
     spacer.grid(row=0, column=1)
 
     photo5 = tk.PhotoImage(file=r'images\singleplayer_start\squad.png')                
-    btn4 = tk.Button(shop_players, image=photo5, command=None, borderwidth=0, background='light grey') #To view team members
+    btn4 = tk.Button(shop_players, image=photo5, command=go_to_squad, borderwidth=0, background='light grey')
     btn4.photo = photo5  # Keep a reference to avoid garbage collection
     btn4.grid(row=0, column=2, pady=10, padx=40, sticky='e')
 
