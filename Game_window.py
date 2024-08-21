@@ -34,10 +34,10 @@ def game(username, name, overs):
                 response.set("bowl")
                 top.destroy()
 
-            button1 = tk.Button(top, text="Bat", command=on_bat)
+            button1 = tk.Button(top, text="bat", command=on_bat)
             button1.pack(side=tk.LEFT, padx=20)
 
-            button2 = tk.Button(top, text="Bowl", command=on_bowl)
+            button2 = tk.Button(top, text="bowl", command=on_bowl)
             button2.pack(side=tk.RIGHT, padx=20)
 
             top.wait_window()  # Wait for the user to make a selection
@@ -52,10 +52,53 @@ def game(username, name, overs):
             tk.messagebox.showinfo("Toss result", toss_msg)
             return player_select
 
-    bat_or_bowl = ''
+    def players_select():
+
+        def submit_selection():
+            selected_indices = listbox.curselection()
+            selected_players = [listbox.get(i) for i in selected_indices]
+            
+            if len(selected_players) != 11:
+                messagebox.showwarning("Selection Error", "You must select exactly 11 players.")
+            else:
+                print("Selected Players:", selected_players)
+                listbox.destroy()
+                scrollbar.destroy()
+                submit_button.destroy()
+                return selected_players
+                # Proceed with the selected players
+
+        players = []
+        path = r'Data\users\player_data_' + username + '.csv'
+        with open(path, 'r') as p_names:
+            player_names = csv.reader(p_names)
+            for row in player_names:
+                if row[0] == 'players':
+                    continue
+                player = row[0]
+                role = row[1]
+                players.append(f"{player} ----- {role}")
+
+        # Create a Listbox with MULTIPLE selection mode
+        listbox = tk.Listbox(toss_frame, selectmode=tk.MULTIPLE, height=15, font=('calibre', 15))
+        for i in players:
+            listbox.insert(tk.END, i)
+        listbox.grid(row=1, column=0, sticky='w', pady=10, padx=10)
+
+        # Add a Scrollbar
+        scrollbar = tk.Scrollbar(toss_frame, orient="vertical")
+        scrollbar.grid(row=1, column=1, sticky='ns')
+        listbox.config(yscrollcommand=scrollbar.set)
+        scrollbar.config(command=listbox.yview)
+
+        # Button to submit the selection
+        submit_button = tk.Button(toss_frame, text="Submit Selection", command=submit_selection, font=('calibre', 15, 'bold'))
+        submit_button.grid(row=2, column=0, columnspan=2, pady=20)
+
     choice_var = tk.StringVar()
 
     def toss_outcome():
+        global bat_or_bowl
         choice = choice_var.get()
         toss = random.choice(toss_list)
         print(f'User chose: {choice}')
@@ -71,8 +114,11 @@ def game(username, name, overs):
         choice_entry_label.destroy()
         choice_dropdown.destroy()
         choose_button.destroy()
-        
-        print(bat_or_bowl)
+
+        print(f"user is {bat_or_bowl}ing")
+        plrs_chosen = players_select()
+
+    
 
     info = f"Hello {name}, -- Current game: {str(overs)} match"
     heading = Label(game, text=info, font=('Times New Roman', 50, 'bold', 'underline'), background='light grey')
@@ -94,47 +140,4 @@ def game(username, name, overs):
 
     game.mainloop()
 
-game('user', 'name', 1)
-
-
-# import tkinter as tk
-# from tkinter import messagebox
-
-# def submit_selection():
-#     selected_indices = listbox.curselection()
-#     selected_players = [listbox.get(i) for i in selected_indices]
-    
-#     if len(selected_players) != 11:
-#         messagebox.showwarning("Selection Error", "You must select exactly 11 players.")
-#     else:
-#         print("Selected Players:", selected_players)
-#         # Proceed with the selected players
-
-# # Sample list of players
-# players = [
-#     "Player 1", "Player 2", "Player 3", "Player 4", "Player 5",
-#     "Player 6", "Player 7", "Player 8", "Player 9", "Player 10",
-#     "Player 11", "Player 12", "Player 13", "Player 14", "Player 15"
-# ]
-
-# root = tk.Tk()
-# root.title("Select 11 Players")
-# root.geometry('400x300')
-
-# # Create a Listbox with MULTIPLE selection mode
-# listbox = tk.Listbox(root, selectmode=tk.MULTIPLE, height=15)
-# for player in players:
-#     listbox.insert(tk.END, player)
-# listbox.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
-
-# # Add a Scrollbar
-# scrollbar = tk.Scrollbar(root)
-# scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
-# listbox.config(yscrollcommand=scrollbar.set)
-# scrollbar.config(command=listbox.yview)
-
-# # Button to submit the selection
-# submit_button = tk.Button(root, text="Submit Selection", command=submit_selection)
-# submit_button.pack(pady=10)
-
-# root.mainloop()
+game('user_1', 'Rishi', 2)
