@@ -5,6 +5,8 @@ from PIL import ImageTk, Image
 import csv
 import random
 
+selected_players_lst = []  # Global variable to store selected players
+
 def game(username, name, overs):
     game = tk.Tk()
     game.title("Quicket-Singleplayer")
@@ -34,10 +36,10 @@ def game(username, name, overs):
                 response.set("bowl")
                 top.destroy()
 
-            button1 = tk.Button(top, text="bat", command=on_bat)
+            button1 = tk.Button(top, text="Bat", command=on_bat)
             button1.pack(side=tk.LEFT, padx=20)
 
-            button2 = tk.Button(top, text="bowl", command=on_bowl)
+            button2 = tk.Button(top, text="Bowl", command=on_bowl)
             button2.pack(side=tk.RIGHT, padx=20)
 
             top.wait_window()  # Wait for the user to make a selection
@@ -53,6 +55,7 @@ def game(username, name, overs):
             return player_select
 
     def players_select():
+        global selected_players_lst  # Access the global variable
 
         def submit_selection():
             selected_indices = listbox.curselection()
@@ -61,12 +64,11 @@ def game(username, name, overs):
             if len(selected_players) != 11:
                 messagebox.showwarning("Selection Error", "You must select exactly 11 players.")
             else:
-                print("Selected Players:", selected_players)
+                selected_players_lst = selected_players  # Update the global variable
+                print("Selected Players:", selected_players_lst)
                 listbox.destroy()
                 scrollbar.destroy()
                 submit_button.destroy()
-                return selected_players
-                # Proceed with the selected players
 
         players = []
         path = r'Data\users\player_data_' + username + '.csv'
@@ -99,6 +101,8 @@ def game(username, name, overs):
 
     def toss_outcome():
         global bat_or_bowl
+        global selected_players_lst  # Access the global variable
+        
         choice = choice_var.get()
         toss = random.choice(toss_list)
         print(f'User chose: {choice}')
@@ -115,10 +119,9 @@ def game(username, name, overs):
         choice_dropdown.destroy()
         choose_button.destroy()
 
-        print(f"user is {bat_or_bowl}ing")
-        plrs_chosen = players_select()
-
-    
+        print(f"User is {bat_or_bowl}ing")
+        players_select()
+        start_game(bat_or_bowl, selected_players_lst) # FIX: SELECTED PLAYERS LIST IS EMPTY
 
     info = f"Hello {name}, -- Current game: {str(overs)} match"
     heading = Label(game, text=info, font=('Times New Roman', 50, 'bold', 'underline'), background='light grey')
