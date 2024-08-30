@@ -1,7 +1,6 @@
 Name,username,password,balance,Batsmen owned,Bowlers owned,wicket keepers owned,all rounders owned,Wickets,Runs,Economy,Innings,Batting Average,Bowling Average,Batting Overs,Bowling Overs,Total Overs
-Rishi,user_1,111,70.90M,6,3,1,3,0,0,0,0,0,0,0,0,0
+Rishi,user_1,111,64.20M,7,3,2,3,0,0,0,0,0,0,0,0,0
 Krish,user_2,444,0,4,3,1,3,0,0,0,0,0,0,0,0,0
 Nairit,user_3,333,0,4,3,1,3,0,0,0,0,0,0,0,0,0
 Madhav,user_4,444,0,4,3,1,3,0,0,0,0,0,0,0,0,0
-Vaibhav,vaibhav,vaibhav19@,0,4,3,1,3,0,0,0,0,0,0,0,0,0
-Rithvik Senthil,me?,123456,0,4,3,1,3,0,0,0,0,0,0,0,0,0
+test,user_6,666,0,4,3,1,3,0,0,0,0,0,0,0,0,0

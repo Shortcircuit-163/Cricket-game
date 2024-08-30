@@ -196,9 +196,9 @@ def start_match_singleplayer(name, username):
 
     def open_game():
         sm.destroy()
-        from Game_window import game
+        from Pre_game import pre_game
         overs=overs_var.get()
-        game(username, name, overs)
+        pre_game(username, name, overs)
 
     name_label = tk.Label(game_start, text = 'Select number of overs:', font=('calibre',21, 'bold'), background='light grey')
     name_label.grid(row=0, column=0, padx=20)
