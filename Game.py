@@ -59,13 +59,15 @@ def start_game(bat_or_bowl, selected_players, overs):
 
             # Simulate the result based on the bat type (random for now)
             selected_bat_type = bat_type_var.get()
-            hit = random.choice([0, 1, 2, 3, 4, 6])
+            hit = random.choice([0, 1, 4, 6])
             runs += hit
             balls_faced += 1
             run_rate = (runs / balls_faced) * 6
 
             # Flash the score
-            if hit in [1, 4, 6]:
+            if hit == 0:
+                flash_score('dot ball', flash_label)
+            else:
                 flash_score(hit, flash_label)
             
             # Update all labels
