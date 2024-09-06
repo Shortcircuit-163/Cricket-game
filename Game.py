@@ -25,9 +25,13 @@ def start_game(bat_or_bowl, selected_players, overs):
     ball_types = ['Fast', 'Spin', 'Swing', 'Bouncer', 'Yorker']
     bat_types = ['Pull', 'Drive', 'Defend', 'Loft', 'Cut']  # List of bat types
 
+
+
     def flash_score(score, flash_label):
         flash_label.config(text=str(score))
-        game.after(1000, lambda: flash_label.config(text=""))  # Reset after 1 second
+        game.after(1500, lambda: flash_label.config(text=""))  # Reset after 1.5 second
+
+
 
     def batting():
         nonlocal runs, balls_faced, run_rate, current_bowler
@@ -107,6 +111,8 @@ def start_game(bat_or_bowl, selected_players, overs):
         bowl_button = tk.Button(game, text="Bowl", command=bowl_ball, font=('calibre', 20, 'bold'))
         bowl_button.pack()
 
+
+
     def bowling():
         nonlocal balls_bowled, current_batsman, current_bowler
 
@@ -119,17 +125,23 @@ def start_game(bat_or_bowl, selected_players, overs):
         current_bowler_label.pack()
         ball_type_label = tk.Label(game, text="Ball Type:", font=('calibre', 20, 'bold'))
         ball_type_label.pack()
+        runs_scored_label = tk.Label(game, text=f"Runs: {runs}", font=('calibre', 20, 'bold'))
+        runs_scored_label.pack()
+        run_rate_label_bowling = tk.Label(game, text=f"Run Rate: {run_rate:.2f}", font=('calibre', 20, 'bold'))
+        run_rate_label_bowling.pack()
         flash_label = tk.Label(game, text="", font=('calibre', 40, 'bold'), fg='red')
         flash_label.pack()
 
         def update_bowling_labels():
             # Update all live labels for bowling
-            balls_bowled_label.config(text=f"Balls Bowled: {balls_bowled}")
             current_batsman_label.config(text=f"Current Batsman: {current_batsman}")
             current_bowler_label.config(text=f"Current Bowler: {current_bowler}")
+            balls_bowled_label.config(text=f"Balls Bowled: {balls_bowled}")
+            runs_scored_label.config(text=f"Runs: {runs}")
+            run_rate_label_bowling.config(text=f"Run Rate: {run_rate:.2f}")
 
         def bowl_ball():
-            nonlocal balls_bowled
+            nonlocal runs, balls_bowled, run_rate
 
             # Reset flash label immediately
             flash_label.config(text="")
@@ -140,7 +152,9 @@ def start_game(bat_or_bowl, selected_players, overs):
             balls_bowled += 1
 
             # Simulate the batsman's response (random for now)
-            hit = random.choice([0, 1, 2, 3, 4, 6])
+            hit = random.choice([0, 1, 4, 6])
+            runs += hit
+            run_rate = (runs / balls_bowled) * 6
 
             # Flash the score
 
