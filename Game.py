@@ -12,12 +12,14 @@ def start_game(bat_or_bowl, selected_players, overs):
     game.iconphoto(True, p1)
 
     # Example data
-    current_batsman = "Player 1"
-    current_bowler = "Bowler 1"
+    current_batsman = "Nairit"
+    current_bowler = "Krish"
     runs = 0
     balls_faced = 0
     balls_bowled = 0
     run_rate = 0.0
+
+    # omkaar
 
     # List of types of balls for computer (random) and user (choice)
     ball_types = ['Fast', 'Spin', 'Swing', 'Bouncer', 'Yorker']
@@ -141,8 +143,8 @@ def start_game(bat_or_bowl, selected_players, overs):
             hit = random.choice([0, 1, 2, 3, 4, 6])
 
             # Flash the score
-            if hit in [1, 4, 6]:
-                flash_score(hit, flash_label)
+
+            flash_score(hit, flash_label)
 
             # Update all labels
             update_bowling_labels()
@@ -164,4 +166,5 @@ def start_game(bat_or_bowl, selected_players, overs):
     game.mainloop()
 
 # Example call to start the game
-start_game('bat', [], 2)
+start_game('bowl', [], 2)
+

@@ -76,7 +76,7 @@ def pre_game(username, name, overs):
             for row in player_names:
                 if row[0] == 'players':
                     continue
-                player = row[0]
+                player = row[0]               
                 role = row[1]
                 players.append(f"{player} ----- {role}")
 

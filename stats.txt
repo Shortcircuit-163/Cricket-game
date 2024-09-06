@@ -1,0 +1,5 @@
+fast - defend[0.1], drive[0.25], loft[0.3], cut[0.5], pull[0.7]
+spin - defend[0.1], drive[0.25], cut[0.3], loft[0.5], pull[0.7]
+swing - defend[0.1], pull[0.25], drive[0.3], loft[0.5], cut[0.7]
+bouncer - pull[0.1], loft[0.25], cut[0.3], defend[0.5], drive[0.7]
+yorker - defend[0.1], drive[0.25], loft[0.3], cut[0.5], pull[0.7]
