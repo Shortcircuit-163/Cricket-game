@@ -197,7 +197,6 @@ def pre_game(username, name, overs):
 
     def toss_outcome():
         global bat_or_bowl
-        global selected_players_lst  # Access the global variable
         
         choice = choice_var.get()
         toss = random.choice(toss_list)
