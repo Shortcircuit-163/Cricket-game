@@ -215,7 +215,7 @@ def pre_game(username, name, overs):
         choice_dropdown.destroy()
         choose_button.destroy()
 
-        bat_or_bowl = 'bowl' # For testing purposes
+        # bat_or_bowl = 'bowl' # For testing purposes
         print(f"User is {bat_or_bowl}ing")
         players_select()
 

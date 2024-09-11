@@ -24,19 +24,31 @@ def start_game(bat_or_bowl, selected_players, overs):
     with open(r'Data\batsmen_data.csv', 'r') as bat_data:
         reader = csv.reader(bat_data)
         for row in reader:
-            computer_batsmen_unpicked.append(row[0])
+            if row[0] == 'name':
+                continue
+            else:
+                computer_batsmen_unpicked.append(row[0])
     with open(r'Data\bowlers_data.csv', 'r') as bowl_data:
         reader = csv.reader(bowl_data)
         for row in reader:
-            computer_bowlers_unpicked.append(row[0])
+            if row[0] == 'name':
+                continue
+            else:
+                computer_bowlers_unpicked.append(row[0])
     with open(r'Data\all_rounders_data.csv', 'r') as alr_data:
         reader = csv.reader(alr_data)
         for row in reader:
-            computer_alr_unpicked.append(row[0])
+            if row[0] == 'name':
+                continue
+            else:
+                computer_alr_unpicked.append(row[0])
     with open(r'Data\wk_keepers_data.csv', 'r') as wk_data:
         reader = csv.reader(wk_data)
         for row in reader:
-            computer_wk_unpicked.append(row[0])
+            if row[0] == 'name':
+                continue
+            else:
+                computer_wk_unpicked.append(row[0])
     
     # Randomly select 11 players for computer
     # Randomly select 4 batsmen
@@ -154,6 +166,16 @@ def start_game(bat_or_bowl, selected_players, overs):
         flash_label.pack()
         batting_widgets.append(flash_label)
 
+        ball_type_1st = random.choice(ball_types)
+        ball_type_label.config(text=f"Ball Type: {ball_type_1st}")
+
+        def get_ball_type():
+            ball_type = random.choice(ball_types)
+            ball_type_label.config(text=f"Ball Type: {ball_type}")
+            return ball_type
+        
+        ball_type = get_ball_type()
+
 
         def update_batting_labels():
             # Update all live labels for batting
@@ -170,7 +192,8 @@ def start_game(bat_or_bowl, selected_players, overs):
                 clear_widgets(batting_widgets)
                 bowling()
 
-            nonlocal runs, balls_faced, run_rate, current_batsman, current_bowler, innings_completed
+
+            nonlocal runs, balls_faced, run_rate, current_batsman, current_bowler, innings_completed, ball_type
 
             if balls_faced % 6 == 0:
                 if balls_faced == (overs * 6) / 2:
@@ -193,10 +216,6 @@ def start_game(bat_or_bowl, selected_players, overs):
 
             # Reset flash label immediately
             flash_label.config(text="")
-
-            # Random ball type from the computer
-            ball_type = random.choice(ball_types)
-            ball_type_label.config(text=f"Ball Type: {ball_type}")
 
             # Disable Bat button for 3 secs
             bat_button.config(state=tk.DISABLED)
@@ -242,6 +261,8 @@ def start_game(bat_or_bowl, selected_players, overs):
 
                 # Update all labels
                 update_batting_labels()
+
+                ball_type = get_ball_type()
 
                 # Disable Bat button for 3 secs
                 bat_button.config(state=tk.DISABLED)
@@ -302,8 +323,14 @@ def start_game(bat_or_bowl, selected_players, overs):
             balls_bowled_label.config(text=f"Balls Bowled: {balls_bowled}")
             runs_scored_label.config(text=f"Runs: {runs}")
             run_rate_label_bowling.config(text=f"Run Rate: {run_rate:.2f}")
-            bat_type_label.config(text=f"Bat Type: {bat_type}")
+            bat_type_label.config(text=f"Bat Type:")
 
+        def get_bat_type():
+            bat_type = random.choice(bat_types)
+            bat_type_label.config(text=f"Bat Type: {bat_type}")
+            return bat_type
+        
+        bat_type = get_bat_type()
 
         def bowl_ball():
             nonlocal runs, balls_bowled, run_rate, current_batsman, current_bowler, innings_completed, bat_type
@@ -346,10 +373,6 @@ def start_game(bat_or_bowl, selected_players, overs):
             selected_ball_type = ball_type_var.get()
             balls_bowled += 1
 
-            # Random bat type from the computer
-            bat_type = random.choice(bat_types)
-            bat_type_label.config(text=f"Ball Type: {bat_type}")
-
             # Simulate the batsman's response based on probabilities
             probability = probabilities[selected_ball_type.lower()][bat_type.lower()]
             random_number = random.uniform(0, 1)
@@ -379,6 +402,9 @@ def start_game(bat_or_bowl, selected_players, overs):
 
             # Update all labels
             update_bowling_labels()
+
+            # Get next bat type
+            bat_type = get_bat_type()
 
             # Disable Bowl button for 3 seconds
             bowl_button.config(state=tk.DISABLED)
