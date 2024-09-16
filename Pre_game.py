@@ -8,8 +8,9 @@ import random
 def pre_game(username, name, overs):
     pre_game = tk.Tk()
     pre_game.title("Quicket-Singleplayer")
-    pre_game.geometry('1000x600')
+    pre_game.geometry('1300x600')
     pre_game.resizable(False, False)
+    pre_game.configure(background='light grey')
     p1 = tk.PhotoImage(file=r'images\home\quicket.png')
     pre_game.iconphoto(True, p1)
 
@@ -98,7 +99,7 @@ def pre_game(username, name, overs):
                     widget.destroy()
                 pre_game.destroy()
                 from Game import start_game
-                start_game(bat_or_bowl, selected_players, overs)
+                start_game(bat_or_bowl, selected_players, overs, username)
 
         batsmen = []
         bowlers = []
@@ -127,10 +128,10 @@ def pre_game(username, name, overs):
         all_widgets = []
 
         # Headings for each listbox
-        tk.Label(toss_frame, text="Batsmen", font=('calibre', 15, 'bold')).grid(row=0, column=0, sticky='w')
-        tk.Label(toss_frame, text="Bowlers", font=('calibre', 15, 'bold')).grid(row=0, column=2, sticky='w')
-        tk.Label(toss_frame, text="Wicketkeepers", font=('calibre', 15, 'bold')).grid(row=0, column=4, sticky='w')
-        tk.Label(toss_frame, text="All-rounders", font=('calibre', 15, 'bold')).grid(row=0, column=6, sticky='w')
+        tk.Label(toss_frame, text="Batsmen", font=('calibre', 15, 'bold'), background='grey').grid(row=0, column=0, sticky='w')
+        tk.Label(toss_frame, text="Bowlers", font=('calibre', 15, 'bold'), background='grey').grid(row=0, column=2, sticky='w')
+        tk.Label(toss_frame, text="Wicketkeepers", font=('calibre', 15, 'bold'), background='grey').grid(row=0, column=4, sticky='w')
+        tk.Label(toss_frame, text="All-rounders", font=('calibre', 15, 'bold'), background='grey').grid(row=0, column=6, sticky='w')
 
         # Listbox for batsmen
         listbox_bat = tk.Listbox(toss_frame, selectmode=tk.MULTIPLE, height=15, font=('calibre', 15), exportselection=False)
@@ -189,7 +190,7 @@ def pre_game(username, name, overs):
         all_widgets.append(scrollbar_ar)
 
         # Submit button
-        submit_button = tk.Button(toss_frame, text="Submit Selection", command=submit_selection, font=('calibre', 15, 'bold'))
+        submit_button = tk.Button(toss_frame, text="Submit Selection", command=submit_selection, font=('calibre', 15, 'bold'), background='grey')
         submit_button.grid(row=2, column=3, columnspan=2, pady=20)
         all_widgets.append(submit_button)
 
@@ -238,4 +239,4 @@ def pre_game(username, name, overs):
 
     pre_game.mainloop()
 
-pre_game('user_1', 'Rishi', 4)
+pre_game('user_1', 'Rishi', 4) # For testing purposes

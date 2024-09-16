@@ -75,16 +75,15 @@ def start_match_singleplayer(name, username):
                     runs = row[9]              
                     economy = row[10]              
                     innings = row[11]               
-                    batting_average = row[12]               
-                    bowling_average = row[13]              
-                    batting_overs = row[14]               
-                    bowling_overs = row[15]              
-                    total_overs = row[16]
-                    all_data = [balance_return, batsmen_owned, bowlers_owned, wicket_keepers_owned, all_rounders_owned, wickets, runs, economy, innings, batting_average, bowling_average, batting_overs, bowling_overs, total_overs]
+                    batting_average = row[12]                            
+                    batting_overs = row[13]               
+                    bowling_overs = row[14]              
+                    total_overs = row[15]
+                    all_data = [balance_return, batsmen_owned, bowlers_owned, wicket_keepers_owned, all_rounders_owned, wickets, runs, economy, innings, batting_average, batting_overs, bowling_overs, total_overs]
                     return all_data
 
     
-    balance_return, batsmen_owned, bowlers_owned, wicket_keepers_owned, all_rounders_owned, wickets, runs, economy, innings, batting_average, bowling_average, batting_overs, bowling_overs, total_overs = return_playerdata()[0], return_playerdata()[1], return_playerdata()[2], return_playerdata()[3], return_playerdata()[4], return_playerdata()[5], return_playerdata()[6], return_playerdata()[7], return_playerdata()[8], return_playerdata()[9], return_playerdata()[10], return_playerdata()[11], return_playerdata()[12], return_playerdata()[13]
+    balance_return, batsmen_owned, bowlers_owned, wicket_keepers_owned, all_rounders_owned, wickets, runs, economy, innings, batting_average, batting_overs, bowling_overs, total_overs = return_playerdata()[0], return_playerdata()[1], return_playerdata()[2], return_playerdata()[3], return_playerdata()[4], return_playerdata()[5], return_playerdata()[6], return_playerdata()[7], return_playerdata()[8], return_playerdata()[9], return_playerdata()[10], return_playerdata()[11], return_playerdata()[12], return_playerdata()[13]
 
     bat = tk.Frame(player_info, highlightbackground="black", highlightthickness=6, background='light grey')
     bat.config(background="light grey")
@@ -158,14 +157,6 @@ def start_match_singleplayer(name, username):
     batting_avg_value = Label(batt, text=batting_average, background='light grey', font=('Times New Roman', 30, 'bold'))
     batting_avg_value.grid(row=1, column=0)
 
-    bowl = tk.Frame(player_info, highlightbackground="black", highlightthickness=6)
-    bowl.config(background="grey")
-    bowl.grid(row=1, column=4, padx=15)
-    bowling_avg = Label(bowl, text='Games lost', background='grey', font=('Times New Roman', 20, 'bold'))
-    bowling_avg.grid(row=0, column=0)
-    bowling_avg_value = Label(bowl, text=bowling_average, background='grey', font=('Times New Roman', 30, 'bold'))
-    bowling_avg_value.grid(row=1, column=0)
-
     inn = tk.Frame(player_info, highlightbackground="black", highlightthickness=6)
     inn.config(background="dark grey")
     inn.grid(row=2, column=1)
@@ -213,5 +204,5 @@ def start_match_singleplayer(name, username):
     sm.mainloop()
 
 # Batsmen owned,Bowlers owned,wicket keepers owned,all rounders owned,Wickets,Runs,Economy,Innings,
-# Batting Average,Bowling Average,Batting Overs,Bowling Overs,Total Overs
+# Batting Average,Batting Overs,Bowling Overs,Total Overs
 #start = start_img.subsample(5, 5)
