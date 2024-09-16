@@ -141,17 +141,28 @@ def start_game(bat_or_bowl, selected_players, overs, username):
     Total_Overs = 0.0 #
     batting_widgets = []
 
-    def save_data():
-            cols = []
-            with open(r'Data\user_data.csv', 'w+', newline='') as file:
+    def save_data(wickets, runs, economy, innings_completed, Batting_Average, Batting_Overs, Bowling_Overs, Total_Overs):
+            rows = []
+            with open(r'Data\user_data.csv', 'r', newline='') as file:
                 reader = csv.reader(file)
                 for row in reader:
-                    cols.append(row)
-                
-                #for i in cols:
-                    #if i[1] == username:
-                #writer = csv.writer(file)
-# Name,username,password,balance,Batsmen_owned,Bowlers_owned,wicket_keepers_owned,all_rounders_owned,Wickets,Runs,Economy,Innings,Batting_Average,Batting Overs,Bowling Overs,Total Overs
+                    rows.append(row)
+
+                for i in rows:
+                    if i[1] == username:
+                        i[8] = int(i[8]) + wickets
+                        i[9] = int(i[9]) + runs
+                        i[10] = (float(i[10]) + float(economy)) / (float(i[14]) + float(Bowling_Overs))
+                        i[11] = int(i[11]) + innings_completed
+                        i[12] = (float(i[12]) + float(Batting_Average)) / (float(i[13]) + float(Batting_Overs))
+                        i[13] = float(i[13]) + float(Batting_Overs)
+                        i[14] = float(i[14]) + float(Bowling_Overs)
+                        i[15] = float(i[15]) + float(Total_Overs)
+                        break
+
+            with open(r'Data\user_data.csv', 'w', newline='') as file:
+                writer = csv.writer(file)
+                writer.writerows(rows)
 
     balls_faced = 0
 
@@ -203,12 +214,18 @@ def start_game(bat_or_bowl, selected_players, overs, username):
 
         def submit_bat_choice():
 
+            nonlocal runs, balls_faced, run_rate, current_batsman, current_bowler, innings_completed, ball_type, wickets, runs, economy, Batting_Average, Batting_Overs, Bowling_Overs, Total_Overs
+
+
             def bowl_now():
+                nonlocal Batting_Average, Batting_Overs, runs
+
+                Batting_Average = runs / (overs / 2)
+                Batting_Overs = overs / 2
+                
                 clear_widgets(batting_widgets)
                 bowling()
 
-
-            nonlocal runs, balls_faced, run_rate, current_batsman, current_bowler, innings_completed, ball_type, wickets, runs, economy, Batting_Average, Batting_Overs, Bowling_Overs, Total_Overs
 
             if balls_faced % 6 == 0:
                 if balls_faced == (overs * 6) / 2:
@@ -355,6 +372,11 @@ def start_game(bat_or_bowl, selected_players, overs, username):
             nonlocal runs_pc, balls_bowled, run_rate, current_batsman, current_bowler, innings_completed, bat_type, wickets, runs, economy, Batting_Average, Batting_Overs, Bowling_Overs, Total_Overs
 
             def bat_now():
+
+                nonlocal Bowling_Overs, economy
+                Bowling_Overs = overs / 2
+                economy = runs_pc / Bowling_Overs
+
                 clear_widgets(bowling_widgets)
                 batting()
 

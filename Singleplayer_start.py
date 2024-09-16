@@ -83,12 +83,12 @@ def start_match_singleplayer(name, username):
                     return all_data
 
     
-    balance_return, batsmen_owned, bowlers_owned, wicket_keepers_owned, all_rounders_owned, wickets, runs, economy, innings, batting_average, batting_overs, bowling_overs, total_overs = return_playerdata()[0], return_playerdata()[1], return_playerdata()[2], return_playerdata()[3], return_playerdata()[4], return_playerdata()[5], return_playerdata()[6], return_playerdata()[7], return_playerdata()[8], return_playerdata()[9], return_playerdata()[10], return_playerdata()[11], return_playerdata()[12], return_playerdata()[13]
+    balance_return, batsmen_owned, bowlers_owned, wicket_keepers_owned, all_rounders_owned, wickets, runs, economy, innings, batting_average, batting_overs, bowling_overs, total_overs = return_playerdata()[0], return_playerdata()[1], return_playerdata()[2], return_playerdata()[3], return_playerdata()[4], return_playerdata()[5], return_playerdata()[6], return_playerdata()[7], return_playerdata()[8], return_playerdata()[9], return_playerdata()[10], return_playerdata()[11], return_playerdata()[12]
 
     bat = tk.Frame(player_info, highlightbackground="black", highlightthickness=6, background='light grey')
     bat.config(background="light grey")
     bat.grid(row=0, column=0, padx=15)
-    batsmen = Label(bat, text='Batsmen', background='light grey', font=('Kalnia Glaze', 20, 'bold'))
+    batsmen = Label(bat, text='Batsmen', background='light grey', font=('Times New Roman', 20, 'bold'))
     batsmen.grid(row=0, column=0, padx=20)
     batsmen_value = Label(bat, text=batsmen_owned, background='light grey', font=('Times New Roman', 30, 'bold'))
     batsmen_value.grid(row=1, column=0)
