@@ -39,7 +39,7 @@ def signup_window():
 
 
         def check_username_taken():
-            with open(r'Data\user_data.csv', 'a+') as add_user:
+            with open(r'all_data\user_data.csv', 'a+') as add_user:
                 add_user.seek(0)
                 user_reader = csv.reader(add_user, delimiter=',')
                 for row in user_reader:
@@ -54,7 +54,7 @@ def signup_window():
 
             new_player_credentials = [name, username, password, 0, 4, 3, 1, 3, 0, 0, 0, 0, 0, 0, 0, 0]
 
-            append_player_data =  open(r'Data\user_data.csv', 'a', newline='')
+            append_player_data =  open(r'all_data\user_data.csv', 'a', newline='')
             datawriter = csv.writer(append_player_data)
             datawriter.writerow(new_player_credentials)
             append_player_data.close()
@@ -63,7 +63,7 @@ def signup_window():
 
                 #batsment--------------------------------
             batsmen_list = []
-            with open(r'Data\batsmen_data.csv', 'r', newline='') as starter_bats:
+            with open(r'all_data\batsmen_data.csv', 'r', newline='') as starter_bats:
                 reader1 = csv.reader(starter_bats)
                 for row1 in reader1:
                     if row1[0] == 'name':
@@ -78,7 +78,7 @@ def signup_window():
 
                 #bowlers----------------------------------
             bowlers_list = []
-            with open(r'Data\bowlers_data.csv', 'r', newline='') as starter_bowls:
+            with open(r'all_data\bowlers_data.csv', 'r', newline='') as starter_bowls:
                 reader2 = csv.reader(starter_bowls)
                 for row2 in reader2:
                     if row2[0] == 'name':
@@ -93,7 +93,7 @@ def signup_window():
 
                 #wk_keepers--------------------------------
             wk_list = []
-            with open(r'Data\wk_keepers_data.csv', 'r', newline='') as starter_wk:
+            with open(r'all_data\wk_keepers_data.csv', 'r', newline='') as starter_wk:
                 reader3 = csv.reader(starter_wk)
                 for row3 in reader3:
                     if row3[0] == 'name':
@@ -108,7 +108,7 @@ def signup_window():
                 
                 # all_rounders--------------------------------
             alr_list = []
-            with open(r'Data\all_rounders_data.csv', 'r', newline='') as starter_alr:
+            with open(r'all_data\all_rounders_data.csv', 'r', newline='') as starter_alr:
                 reader4 = csv.reader(starter_alr)
                 for row4 in reader4:
                     if row4[0] == 'name':
@@ -121,7 +121,7 @@ def signup_window():
                 # Print the selected items
                 print(selected_items4)
 
-                path = r'Data\users\player_data_' + username + '.csv'
+                path = r'all_data\users\player_data_' + username + '.csv'
                 with open(path, 'w', newline='') as players:
                     player_data_writer = csv.writer(players)
                     player_data_writer.writerows([['players', 'role', 'bat', 'bowl'],

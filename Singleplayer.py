@@ -47,7 +47,7 @@ def open_singleplayer():
         print("Username input: " + username)
         print("Password input: " + password)
 
-        with open(r'Data\user_data.csv', 'r') as passwords:
+        with open(r'all_data\user_data.csv', 'r') as passwords:
             pass_reader = csv.reader(passwords, delimiter=',')
             for row in pass_reader:
                 if len(row[1]) > 2:
@@ -72,7 +72,7 @@ def open_singleplayer():
     name_label.grid(row=0, column=0)
     
     usernames = []
-    with open(r'Data\user_data.csv') as users:
+    with open(r'all_data\user_data.csv') as users:
         user_reader = csv.reader(users, delimiter=',')
         for row in user_reader:
             if row[1] == 'username':

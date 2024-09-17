@@ -31,7 +31,7 @@ def shop_scr(name, username):
             #BUYING THE PLAYER
             def buy_player(username, player_name, player_price, player_role, bat, bowl):
 
-                playerdata = r'Data\users\player_data_' + username + '.csv'
+                playerdata = r'all_data\users\player_data_' + username + '.csv'
                 with open(playerdata, 'r') as f:
                     player_reader = csv.reader(f, delimiter=',')
                     for row in player_reader:
@@ -64,12 +64,12 @@ def shop_scr(name, username):
                 converted_player_price = convert_currency_num(player_price)
                     
                 # Read all data from the CSV file
-                with open(r'Data\user_data.csv', 'r', newline='') as file:
+                with open(r'all_data\user_data.csv', 'r', newline='') as file:
                     balance_reader = csv.reader(file)
                     rows = list(balance_reader)
 
                 # Open the CSV file for writing
-                with open(r'Data\user_data.csv', 'w', newline='') as file:
+                with open(r'all_data\user_data.csv', 'w', newline='') as file:
                     balance_writer = csv.writer(file)
                     
                     for row in rows:
@@ -96,7 +96,7 @@ def shop_scr(name, username):
                                 p_no = int(row[role_index])
                                 row[role_index] = str(p_no + 1)
 
-                                path = r'Data\users\player_data_' + username + '.csv'
+                                path = r'all_data\users\player_data_' + username + '.csv'
                                 with open(path, 'a', newline='') as players:
                                     writer = csv.writer(players)
                                     writer.writerow([player_name, player_role, bat, bowl])
@@ -113,13 +113,13 @@ def shop_scr(name, username):
             def get_names_pstats(img_no, ptype):
                 file_path = ''
                 if ptype == 'batsmen':
-                    file_path = r'Data\batsmen_data.csv'
+                    file_path = r'all_data\batsmen_data.csv'
                 elif ptype == 'bowlers':
-                    file_path = r'Data\bowlers_data.csv'
+                    file_path = r'all_data\bowlers_data.csv'
                 elif ptype == 'all_rounders':
-                    file_path = r'Data\all_rounders_data.csv'
+                    file_path = r'all_data\all_rounders_data.csv'
                 elif ptype == 'wk_keepers':
-                    file_path = r'Data\wk_keepers_data.csv'
+                    file_path = r'all_data\wk_keepers_data.csv'
 
                 with open(file_path) as p_names:
                     names_reader = csv.reader(p_names, delimiter=',')
@@ -178,7 +178,7 @@ def shop_scr(name, username):
                  # Function to update the balance label
                 def update_balance():
                     try:
-                        with open(r'Data\user_data.csv', 'r', newline='') as file:
+                        with open(r'all_data\user_data.csv', 'r', newline='') as file:
                             balance_reader = csv.reader(file)
                             for row in balance_reader:
                                 if row[1] == username:

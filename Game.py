@@ -21,34 +21,34 @@ def start_game(bat_or_bowl, selected_players, overs, username):
     computer_alr_unpicked = []
     computer_wk_unpicked = []
 
-    with open(r'Data\batsmen_data.csv', 'r') as bat_data:
+    with open(r'all_data\batsmen_data.csv', 'r') as bat_data:
         reader = csv.reader(bat_data)
         for row in reader:
             if row[0] == 'name':
                 continue
             else:
-                computer_batsmen_unpicked.append(row[0])
-    with open(r'Data\bowlers_data.csv', 'r') as bowl_data:
+                computer_batsmen_unpicked.append([row[0], row[2]])
+    with open(r'all_data\bowlers_data.csv', 'r') as bowl_data:
         reader = csv.reader(bowl_data)
         for row in reader:
             if row[0] == 'name':
                 continue
             else:
-                computer_bowlers_unpicked.append(row[0])
-    with open(r'Data\all_rounders_data.csv', 'r') as alr_data:
+                computer_bowlers_unpicked.append([row[0], row[2]])
+    with open(r'all_data\all_rounders_data.csv', 'r') as alr_data:
         reader = csv.reader(alr_data)
         for row in reader:
             if row[0] == 'name':
                 continue
             else:
-                computer_alr_unpicked.append(row[0])
-    with open(r'Data\wk_keepers_data.csv', 'r') as wk_data:
+                computer_alr_unpicked.append([row[0], row[2]])
+    with open(r'all_data\wk_keepers_data.csv', 'r') as wk_data:
         reader = csv.reader(wk_data)
         for row in reader:
             if row[0] == 'name':
                 continue
             else:
-                computer_wk_unpicked.append(row[0])
+                computer_wk_unpicked.append([row[0], row[2]])
     
     # Randomly select 11 players for computer
     # Randomly select 4 batsmen
@@ -78,10 +78,6 @@ def start_game(bat_or_bowl, selected_players, overs, username):
     computer_batting_order = computer_batsmen + computer_alr + computer_wk + computer_bowlers
     computer_bowling_order = computer_bowlers + computer_alr
 
-    print("Player Batting Order:", player_batting_order)
-    print("Computer Batting Order:", computer_batting_order)
-
-
     # omkaar
     
     innings_completed = 0  # Track the number of completed innings
@@ -91,11 +87,11 @@ def start_game(bat_or_bowl, selected_players, overs, username):
     bat_types = ['Pull', 'Drive', 'Defend', 'Loft', 'Cut']  # List of bat types
 
     probabilities = {
-    'fast': {'defend': 0.1, 'drive': 0.25, 'loft': 0.3, 'cut': 0.5, 'pull': 0.7},
-    'spin': {'defend': 0.1, 'drive': 0.25, 'cut': 0.3, 'loft': 0.5, 'pull': 0.7},
-    'swing': {'defend': 0.1, 'pull': 0.25, 'drive': 0.3, 'loft': 0.5, 'cut': 0.7},
-    'bouncer': {'pull': 0.1, 'loft': 0.25, 'cut': 0.3, 'defend': 0.5, 'drive': 0.7},
-    'yorker': {'defend': 0.1, 'drive': 0.25, 'loft': 0.3, 'cut': 0.5, 'pull': 0.7}
+    'fast': {'defend': 0.1, 'drive': 0.2, 'loft': 0.3, 'cut': 0.4, 'pull': 0.5},
+    'spin': {'defend': 0.1, 'drive': 0.2, 'cut': 0.3, 'loft': 0.4, 'pull': 0.5},
+    'swing': {'defend': 0.1, 'pull': 0.2, 'drive': 0.3, 'loft': 0.4, 'cut': 0.5},
+    'bouncer': {'pull': 0.1, 'loft': 0.2, 'cut': 0.3, 'defend': 0.4, 'drive': 0.5},
+    'yorker': {'defend': 0.1, 'drive': 0.2, 'loft': 0.3, 'cut': 0.4, 'pull': 0.5}
     }
 
     def get_next_batsman_player():
@@ -103,18 +99,19 @@ def start_game(bat_or_bowl, selected_players, overs, username):
         try:
             return player_batting_order.pop(0)
         except IndexError:
-            return 'All out'
+            return ['All out', 0, 0]
     
     def get_next_bowler_player():
         nonlocal player_bowling_order
         return player_bowling_order.pop(0)
+    
     
     def get_next_batsman_computer():
         nonlocal computer_batting_order
         try:
             return computer_batting_order.pop(0)
         except IndexError:
-            return 'All out'
+            return ['All out',0, 0]
     
     def get_next_bowler_computer():
         nonlocal computer_bowling_order
@@ -143,7 +140,7 @@ def start_game(bat_or_bowl, selected_players, overs, username):
 
     def save_data(wickets, runs, economy, innings_completed, Batting_Average, Batting_Overs, Bowling_Overs, Total_Overs):
             rows = []
-            with open(r'Data\user_data.csv', 'r', newline='') as file:
+            with open(r'all_data\user_data.csv', 'r', newline='') as file:
                 reader = csv.reader(file)
                 for row in reader:
                     rows.append(row)
@@ -160,7 +157,7 @@ def start_game(bat_or_bowl, selected_players, overs, username):
                         i[15] = float(i[15]) + float(Total_Overs)
                         break
 
-            with open(r'Data\user_data.csv', 'w', newline='') as file:
+            with open(r'all_data\user_data.csv', 'w', newline='') as file:
                 writer = csv.writer(file)
                 writer.writerows(rows)
 
@@ -169,8 +166,9 @@ def start_game(bat_or_bowl, selected_players, overs, username):
     def batting():
         
 
-        current_batsman = player_batting_order[0]
-        current_bowler = computer_bowling_order[0]
+        current_batsman = player_batting_order[0][0]
+        current_bowler = computer_bowling_order[0][0]
+        current_batsman_rating = player_batting_order[0][1]
 
         # Live labels for batting
         balls_faced_label = tk.Label(game, text=f"Balls Faced: {balls_faced}", font=('calibre', 20, 'bold'))
@@ -214,7 +212,7 @@ def start_game(bat_or_bowl, selected_players, overs, username):
 
         def submit_bat_choice():
 
-            nonlocal runs, balls_faced, run_rate, current_batsman, current_bowler, innings_completed, ball_type, wickets, runs, economy, Batting_Average, Batting_Overs, Bowling_Overs, Total_Overs
+            nonlocal runs, balls_faced, run_rate, current_batsman, current_batsman_rating, current_bowler, innings_completed, ball_type, wickets, runs, economy, Batting_Average, Batting_Overs, Bowling_Overs, Total_Overs
 
 
             def bowl_now():
@@ -243,68 +241,84 @@ def start_game(bat_or_bowl, selected_players, overs, username):
                         tk.messagebox.showinfo("Innings over", "Your innings is over. Click OK to start bowling.")
                         bowl_now()
                 else:
-                    current_batsman = get_next_batsman_player()
-                    current_bowler = get_next_bowler_computer()
+                    current_batsman_and_rating = get_next_batsman_player()
+                    current_batsman, current_batsman_rating = current_batsman_and_rating[0], current_batsman_and_rating[1]
+
                     if current_batsman == 'All out':
                         # All out
                         tk.messagebox.showinfo("Innings over", "Your innings is over: ALL BATSMEN USED. Click OK to start bowling.")
                         bowl_now()
+                    
+                    current_bowler = get_next_bowler_computer()[0]
 
             # Reset flash label immediately
-            flash_label.config(text="")
+            try:
+                flash_label.config(text="")
+            except tk.TclError:
+                pass                            # Suppress error if widget doesn't exist
 
-            # Disable Bat button for 3 secs
-            bat_button.config(state=tk.DISABLED)
+            try:
+                # Disable Bat button for 2 secs
+                bat_button.config(state=tk.DISABLED)
 
-            # After 3 seconds, enable Bat button and allow player to choose shot
-            game.after(2000, lambda: bat_button.config(state=tk.NORMAL))
+                # After 3 seconds, enable Bat button and allow player to choose shot
+                game.after(2000, lambda: bat_button.config(state=tk.NORMAL))
+            
+                # Scale the rating to influence the probability (90+ gives a higher probability of success)
+                rating_factor = 1 + ((float(current_batsman_rating) - 90.0)) / 10  # rating_factor > 1 if rating > 90
 
-            selected_bat_type = bat_type_var.get()
-            probability = probabilities[ball_type.lower()][selected_bat_type.lower()]
-            random_number = random.uniform(0, 1)
+                selected_bat_type = bat_type_var.get()
+                probability = probabilities[ball_type.lower()][selected_bat_type.lower()]
+                adjusted_probability = probability / rating_factor
+                random_number = random.uniform(0, 1)
 
-            if random_number > probability:
-                if selected_bat_type.lower() == 'defend':
-                    hit = random.choice([0, 1])
-                else:
-                    hit = random.choice([0, 1, 4, 6])
-                runs += hit
-                balls_faced += 1
-                run_rate = (runs / balls_faced) * 6
+                if random_number > adjusted_probability:
+                    if selected_bat_type.lower() == 'defend':
+                        hit = random.choice([0, 1])
+                    else:
+                        hit = random.choice([0, 1, 4, 6])
+                    runs += hit
+                    balls_faced += 1
+                    run_rate = (runs / balls_faced) * 6
 
-                # Flash the score
-                if hit == 0:
-                    flash_score('dot ball', flash_label)
-                else:
-                    flash_score(hit, flash_label)
+                    # Flash the score
+                    if hit == 0:
+                        flash_score('dot ball', flash_label)
+                    else:
+                        flash_score(hit, flash_label)
+                    
+                    # Update all labels
+                    update_batting_labels()
                 
+                else:
+                    # Flash the score
+                    flash_score('OUT', flash_label)
+                    balls_faced += 1
+                    runs += 0
+                    run_rate = (runs / balls_faced) * 6
+
+                    # Get next batsman
+                    current_batsman_and_rating = get_next_batsman_player()
+                    current_batsman, current_batsman_rating = current_batsman_and_rating[0], current_batsman_rating[1]
+                    if current_batsman == 'All out':
+                        # All out
+                        bowl_now()
+                        tk.messagebox.showinfo("Innings over", "Your innings is over: ALL OUT. Click OK to start bowling.")
+                        return
+
                 # Update all labels
                 update_batting_labels()
-            
-            else:
-                # Flash the score
-                flash_score('OUT', flash_label)
-                balls_faced += 1
-                runs += 0
-                run_rate = (runs / balls_faced) * 6
 
-                current_batsman = get_next_batsman_player()
-                if current_batsman == 'All out':
-                    # All out
-                    bowl_now()
-                    tk.messagebox.showinfo("Innings over", "Your innings is over: ALL OUT. Click OK to start bowling.")
-                    return
+                ball_type = get_ball_type()
 
-            # Update all labels
-            update_batting_labels()
+                # Disable Bat button for 2 secs
+                bat_button.config(state=tk.DISABLED)
 
-            ball_type = get_ball_type()
+                # After 2 seconds, enable Bat button and allow player to choose shot
+                game.after(2000, lambda: bat_button.config(state=tk.NORMAL))
 
-            # Disable Bat button for 2 secs
-            bat_button.config(state=tk.DISABLED)
-
-            # After 2 seconds, enable Bat button and allow player to choose shot
-            game.after(2000, lambda: bat_button.config(state=tk.NORMAL))
+            except tk.TclError:
+                pass
 
         # Drop-down to select bat type
         bat_type_var = tk.StringVar()
@@ -322,12 +336,13 @@ def start_game(bat_or_bowl, selected_players, overs, username):
         runs_pc = 0
         balls_bowled = 0
         run_rate_pc = 0.0
-        bat_type = ''
+        bat_type = '--'
         bowling_widgets = []
 
         # If it's the start of the bowling phase
-        current_batsman =computer_batting_order[0]
-        current_bowler = player_bowling_order[0]
+        current_batsman = computer_batting_order[0][0]
+        current_bowler = player_bowling_order[0][0]
+        current_bowler_rating = player_bowling_order[0][2]
 
         # Live labels for bowling
         balls_bowled_label = tk.Label(game, text=f"Balls Bowled: {balls_bowled}", font=('calibre', 20, 'bold'))
@@ -359,17 +374,15 @@ def start_game(bat_or_bowl, selected_players, overs, username):
             balls_bowled_label.config(text=f"Balls Bowled: {balls_bowled}")
             runs_scored_label.config(text=f"Runs: {runs_pc}")
             run_rate_pc_label_bowling.config(text=f"Run Rate: {run_rate_pc:.2f}")
-            bat_type_label.config(text=f"Bat Type:")
 
         def get_bat_type():
             bat_type = random.choice(bat_types)
-            bat_type_label.config(text=f"Bat Type: {bat_type}")
             return bat_type
         
         bat_type = get_bat_type()
 
         def bowl_ball():
-            nonlocal runs_pc, balls_bowled, run_rate, current_batsman, current_bowler, innings_completed, bat_type, wickets, runs, economy, Batting_Average, Batting_Overs, Bowling_Overs, Total_Overs
+            nonlocal runs_pc, run_rate_pc, balls_bowled, run_rate, current_batsman, current_bowler,current_bowler_rating, innings_completed, bat_type, wickets, runs, economy, Batting_Average, Batting_Overs, Bowling_Overs, Total_Overs
 
             def bat_now():
 
@@ -401,8 +414,10 @@ def start_game(bat_or_bowl, selected_players, overs, username):
                         bat_now()
                         return
                 else:
-                    current_batsman = get_next_batsman_computer()
-                    current_bowler = get_next_bowler_player()
+                    current_batsman = get_next_batsman_computer()[0]
+                    current_bowler_and_rating = get_next_bowler_player()
+                    current_bowler, current_bowler_rating = current_bowler_and_rating[0], current_bowler_and_rating[2]
+                    print(current_bowler_rating)
                     if current_batsman == 'All out':
                         innings_completed += 1
                         if innings_completed == 2:
@@ -414,50 +429,61 @@ def start_game(bat_or_bowl, selected_players, overs, username):
                             bat_now()
                             return
 
-            # User selects ball type
-            selected_ball_type = ball_type_var.get()
-            balls_bowled += 1
+            try:
 
-            # Simulate the batsman's response based on probabilities
-            probability = probabilities[selected_ball_type.lower()][bat_type.lower()]
-            random_number = random.uniform(0, 1)
-
-            # Determine if the computer batsman is out
-            if random_number < probability:
-                flash_score('OUT', flash_label)
-                wickets += 1
-                current_batsman = get_next_batsman_computer()
-                if current_batsman == 'All out':
-                    innings_completed += 1
-                    if innings_completed == 2:
-                        tk.messagebox.showinfo("Game Over", "The game has ended. Thanks for playing!")
-                        game.quit()
-                        return
+                # User selects ball type
+                selected_ball_type = ball_type_var.get()
+                balls_bowled += 1
+                print(selected_ball_type)
+                # Scale the rating to influence the probability (90+ gives a higher probability of success)
+                rating_factor = 1 + ((float(current_bowler_rating) - 90.0) / 10)  # rating_factor > 1 if rating > 90
+                print(rating_factor)
+                # Simulate the batsman's response based on probabilities
+                probability = probabilities[selected_ball_type.lower()][bat_type.lower()]
+                adjusted_probability = probability / rating_factor
+                random_number = random.uniform(0, 1)
+                print(adjusted_probability, random_number)
+                # Determine if the computer batsman is out
+                if random_number < adjusted_probability:
+                    flash_score('OUT', flash_label)
+                    wickets += 1
+                    current_batsman = get_next_batsman_computer()[0]
+                    if current_batsman == 'All out':
+                        innings_completed += 1
+                        if innings_completed == 2:
+                            tk.messagebox.showinfo("Game Over", "The game has ended. Thanks for playing!")
+                            game.quit()
+                            return
+                        else:
+                            tk.messagebox.showinfo("Innings Over", "Your innings is over: ALL OUT. Click OK to start batting.")
+                            bat_now()
+                            return
+                else:
+                    if bat_type.lower() == 'defend':
+                        hit = random.choice([0, 1])
                     else:
-                        tk.messagebox.showinfo("Innings Over", "Your innings is over: ALL OUT. Click OK to start batting.")
-                        bat_now()
-                        return
-            else:
-                if bat_type.lower() == 'defend':
-                    hit = random.choice([0, 1])
-                else:
-                    hit = random.choice([0, 1, 4, 6])
-                runs_pc += hit
-                run_rate_pc = (runs / balls_bowled) * 6
-                if hit == 0:
-                    flash_score('dot ball', flash_label)
-                else:
-                    flash_score(hit, flash_label)
+                        hit = random.choice([0, 1, 4, 6])
+                    runs_pc += hit
+                    run_rate_pc = (runs / balls_bowled) * 6
+                    if hit == 0:
+                        flash_score('dot ball', flash_label)
+                    else:
+                        flash_score(hit, flash_label)
 
-            # Update all labels
-            update_bowling_labels()
+                bat_type_label.config(text=f"Bowl countered with: {bat_type}")
 
-            # Get next bat type
-            bat_type = get_bat_type()
+                # Update all labels
+                update_bowling_labels()
 
-            # Disable Bowl button for 3 seconds
-            bowl_button.config(state=tk.DISABLED)
-            game.after(2000, lambda: bowl_button.config(state=tk.NORMAL))
+                # Get next bat type
+                bat_type = get_bat_type()
+
+                # Disable Bowl button for 3 seconds
+                bowl_button.config(state=tk.DISABLED)
+                game.after(2000, lambda: bowl_button.config(state=tk.NORMAL))
+            
+            except tk.TclError:
+                pass
 
         # Drop-down to select ball type
         ball_type_var = tk.StringVar()

@@ -61,7 +61,7 @@ def start_match_singleplayer(name, username):
     player_info.grid(row=1, column=1, pady = 50)
 
     def return_playerdata():
-        data_path = r'Data\user_data.csv'
+        data_path = r'all_data\user_data.csv'
         with open(data_path) as player_data:
             user_reader = csv.reader(player_data, delimiter=',')
             for row in user_reader:

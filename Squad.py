@@ -80,7 +80,7 @@ def squad_scr(name, username):
             
             owned_players_list = []
             roles_list = []
-            with open(r'Data\users\player_data_' + username + '.csv', 'r') as owned_players:
+            with open(r'all_data\users\player_data_' + username + '.csv', 'r') as owned_players:
                 owned_reader = csv.reader(owned_players, delimiter=',')
                 for row in owned_reader:
                     if row[1] == ('players'):

@@ -90,11 +90,22 @@ def pre_game(username, name, overs):
             if 'not_ok' in player_composition:
                 messagebox.showwarning("Selection Error", "You must select exactly 11 players: 4 batsmen, 3 bowlers, 1 wicketkeeper, and 3 all-rounders.")
             else:
-                selected_players = []
+                selected_players = []                    
                 selected_players.append(selected_players_bat)
                 selected_players.append(selected_players_bowl)
                 selected_players.append(selected_players_alr)
                 selected_players.append(selected_players_wk)
+
+                with open(r'all_data\users\player_data_' + username + '.csv', 'r', newline='') as p_data:
+                    reader = csv.reader(p_data)
+                    for player_type in selected_players:
+                        for player in player_type:
+                            for row in reader:
+                                if row[0] == player:
+                                    player_type[player_type.index(player)] = [player, row[2], row[3]]
+                                    break
+                            p_data.seek(0)
+                            
                 for widget in all_widgets:
                     widget.destroy()
                 pre_game.destroy()
@@ -105,9 +116,8 @@ def pre_game(username, name, overs):
         bowlers = []
         wicketkeepers = []
         allrounders = []
-        players = []
 
-        path = r'Data\users\player_data_' + username + '.csv'
+        path = r'all_data\users\player_data_' + username + '.csv'
         with open(path, 'r') as p_names:
             player_names = csv.reader(p_names)
             for row in player_names:
@@ -115,7 +125,6 @@ def pre_game(username, name, overs):
                     continue
                 player = row[0]               
                 role = row[1]
-                players.append(f"{player} ----- {role}")
                 if role == 'bat':
                     batsmen.append(player)
                 elif role == 'bowl':
