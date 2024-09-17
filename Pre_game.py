@@ -248,4 +248,4 @@ def pre_game(username, name, overs):
 
     pre_game.mainloop()
 
-pre_game('user_1', 'Rishi', 2) # For testing purposes
+# pre_game('user_1', 'Rishi', 4) # For testing purposes

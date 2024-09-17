@@ -130,12 +130,12 @@ def start_game(bat_or_bowl, selected_players, overs, username):
 
     runs = 0
     run_rate = 0.0
-    economy = 0.0 #
-    wickets = 0 #
+    economy = 0.0
+    wickets = 0
     Batting_Average = 0.0
-    Batting_Overs = 0.0 #
-    Bowling_Overs = 0.0 #
-    Total_Overs = 0.0 #
+    Batting_Overs = 0
+    Bowling_Overs = 0
+    Total_Overs = 0
     batting_widgets = []
 
     def save_data(wickets, runs, economy, innings_completed, Batting_Average, Batting_Overs, Bowling_Overs, Total_Overs):
@@ -152,9 +152,9 @@ def start_game(bat_or_bowl, selected_players, overs, username):
                         i[10] = (float(i[10]) + float(economy)) / (float(i[14]) + float(Bowling_Overs))
                         i[11] = int(i[11]) + innings_completed
                         i[12] = (float(i[12]) + float(Batting_Average)) / (float(i[13]) + float(Batting_Overs))
-                        i[13] = float(i[13]) + float(Batting_Overs)
-                        i[14] = float(i[14]) + float(Bowling_Overs)
-                        i[15] = float(i[15]) + float(Total_Overs)
+                        i[13] = int((i[13])) + (Batting_Overs)
+                        i[14] = int((i[14])) + (Bowling_Overs)
+                        i[15] = int(((i[15]))) + (Total_Overs)
                         break
 
             with open(r'all_data\user_data.csv', 'w', newline='') as file:
@@ -219,8 +219,7 @@ def start_game(bat_or_bowl, selected_players, overs, username):
                 nonlocal Batting_Average, Batting_Overs, runs
 
                 Batting_Average = runs / (overs / 2)
-                Batting_Overs = overs / 2
-                
+                Batting_Overs = int(overs / 2)
                 clear_widgets(batting_widgets)
                 bowling()
 
@@ -231,23 +230,35 @@ def start_game(bat_or_bowl, selected_players, overs, username):
                     innings_completed += 1
                     if innings_completed == 2:
                         Batting_Average = runs / (overs / 2)
-                        Batting_Overs = overs / 2
+                        Batting_Overs = int(overs / 2)
                         Total_Overs = overs
                         save_data(wickets, runs, economy, innings_completed, Batting_Average, Batting_Overs, Bowling_Overs, Total_Overs)
+                        clear_widgets(batting_widgets)
                         tk.messagebox.showinfo("Game Over", "The game has ended. Thanks for playing!")
                         game.quit()
                         return
                     else:
-                        tk.messagebox.showinfo("Innings over", "Your innings is over. Click OK to start bowling.")
                         bowl_now()
+                        tk.messagebox.showinfo("Innings over", "Your innings is over. Click OK to start bowling.")
                 else:
                     current_batsman_and_rating = get_next_batsman_player()
                     current_batsman, current_batsman_rating = current_batsman_and_rating[0], current_batsman_and_rating[1]
 
                     if current_batsman == 'All out':
                         # All out
-                        tk.messagebox.showinfo("Innings over", "Your innings is over: ALL BATSMEN USED. Click OK to start bowling.")
-                        bowl_now()
+                        innings_completed += 1
+                        if innings_completed == 2:
+                            Batting_Average = runs / (overs / 2)
+                            Batting_Overs = int(overs / 2)
+                            Total_Overs = overs
+                            save_data(wickets, runs, economy, innings_completed, Batting_Average, Batting_Overs, Bowling_Overs, Total_Overs)
+                            clear_widgets(batting_widgets)
+                            tk.messagebox.showinfo("Game Over", "The game has ended. Thanks for playing!")
+                            game.quit()
+                            return
+                        else:
+                            bowl_now()
+                            tk.messagebox.showinfo("Innings over", "Your innings is over: ALL BATSMEN USED. Click OK to start bowling.")
                     
                     current_bowler = get_next_bowler_computer()[0]
 
@@ -302,9 +313,20 @@ def start_game(bat_or_bowl, selected_players, overs, username):
                     current_batsman, current_batsman_rating = current_batsman_and_rating[0], current_batsman_rating[1]
                     if current_batsman == 'All out':
                         # All out
-                        bowl_now()
-                        tk.messagebox.showinfo("Innings over", "Your innings is over: ALL OUT. Click OK to start bowling.")
-                        return
+                        innings_completed += 1
+                        if innings_completed == 2:
+                            Batting_Average = runs / (overs / 2)
+                            Batting_Overs = int(overs / 2)
+                            Total_Overs = overs
+                            save_data(wickets, runs, economy, innings_completed, Batting_Average, Batting_Overs, Bowling_Overs, Total_Overs)
+                            clear_widgets(batting_widgets)
+                            tk.messagebox.showinfo("Game Over", "The game has ended. Thanks for playing!")
+                            game.quit()
+                            return
+                        else:
+                            bowl_now()
+                            tk.messagebox.showinfo("Innings over", "Your innings is over: ALL OUT. Click OK to start bowling.")
+                            return
 
                 # Update all labels
                 update_batting_labels()
@@ -387,7 +409,7 @@ def start_game(bat_or_bowl, selected_players, overs, username):
             def bat_now():
 
                 nonlocal Bowling_Overs, economy
-                Bowling_Overs = overs / 2
+                Bowling_Overs = int(overs / 2)
                 economy = runs_pc / Bowling_Overs
 
                 clear_widgets(bowling_widgets)
@@ -402,31 +424,37 @@ def start_game(bat_or_bowl, selected_players, overs, username):
                     # End of innings
                     innings_completed += 1
                     if innings_completed == 2:
-                        Bowling_Overs = overs / 2
+                        Bowling_Overs = int(overs / 2)
                         Total_Overs = overs
                         economy = runs_pc / Bowling_Overs
                         save_data(wickets, runs, economy, innings_completed, Batting_Average, Batting_Overs, Bowling_Overs, Total_Overs)
+                        clear_widgets(bowling_widgets)
                         tk.messagebox.showinfo("Game Over", "The game has ended. Thanks for playing!")
                         game.quit()
                         return
                     else:
-                        tk.messagebox.showinfo("Innings Over", "Your innings is over. Click OK to start batting.")
                         bat_now()
+                        tk.messagebox.showinfo("Innings Over", "Your innings is over. Click OK to start batting.")
                         return
                 else:
                     current_batsman = get_next_batsman_computer()[0]
                     current_bowler_and_rating = get_next_bowler_player()
                     current_bowler, current_bowler_rating = current_bowler_and_rating[0], current_bowler_and_rating[2]
-                    print(current_bowler_rating)
+
                     if current_batsman == 'All out':
                         innings_completed += 1
                         if innings_completed == 2:
+                            Bowling_Overs = int(overs / 2)
+                            Total_Overs = overs
+                            economy = runs_pc / Bowling_Overs
+                            save_data(wickets, runs, economy, innings_completed, Batting_Average, Batting_Overs, Bowling_Overs, Total_Overs)
+                            clear_widgets(bowling_widgets)
                             tk.messagebox.showinfo("Game Over", "The game has ended. Thanks for playing!")
                             game.quit()
                             return
                         else:
-                            tk.messagebox.showinfo("Innings Over", "Your innings is over: ALL BATSMEN USED. Click OK to start batting.")
                             bat_now()
+                            tk.messagebox.showinfo("Innings Over", "Your innings is over: ALL BATSMEN USED. Click OK to start batting.")
                             return
 
             try:
@@ -434,15 +462,15 @@ def start_game(bat_or_bowl, selected_players, overs, username):
                 # User selects ball type
                 selected_ball_type = ball_type_var.get()
                 balls_bowled += 1
-                print(selected_ball_type)
+
                 # Scale the rating to influence the probability (90+ gives a higher probability of success)
                 rating_factor = 1 + ((float(current_bowler_rating) - 90.0) / 10)  # rating_factor > 1 if rating > 90
-                print(rating_factor)
+
                 # Simulate the batsman's response based on probabilities
                 probability = probabilities[selected_ball_type.lower()][bat_type.lower()]
                 adjusted_probability = probability / rating_factor
                 random_number = random.uniform(0, 1)
-                print(adjusted_probability, random_number)
+
                 # Determine if the computer batsman is out
                 if random_number < adjusted_probability:
                     flash_score('OUT', flash_label)
@@ -451,12 +479,17 @@ def start_game(bat_or_bowl, selected_players, overs, username):
                     if current_batsman == 'All out':
                         innings_completed += 1
                         if innings_completed == 2:
+                            Bowling_Overs = int(overs / 2)
+                            economy = runs_pc / Bowling_Overs
+                            Total_Overs = overs
+                            save_data(wickets, runs, economy, innings_completed, Batting_Average, Batting_Overs, Bowling_Overs, Total_Overs)
+                            clear_widgets(bowling_widgets)
                             tk.messagebox.showinfo("Game Over", "The game has ended. Thanks for playing!")
                             game.quit()
                             return
                         else:
-                            tk.messagebox.showinfo("Innings Over", "Your innings is over: ALL OUT. Click OK to start batting.")
                             bat_now()
+                            tk.messagebox.showinfo("Innings Over", "Your innings is over: ALL OUT. Click OK to start batting.")
                             return
                 else:
                     if bat_type.lower() == 'defend':

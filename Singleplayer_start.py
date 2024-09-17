@@ -193,7 +193,7 @@ def start_match_singleplayer(name, username):
 
     name_label = tk.Label(game_start, text = 'Select number of overs:', font=('calibre',21, 'bold'), background='light grey')
     name_label.grid(row=0, column=0, padx=20)
-    over_options = [2, 3, 4]
+    over_options = [2, 4, 6, 8]
     over_select = Combobox(game_start, textvariable=overs_var, values=over_options, state="readonly", font=('calibre',21,'bold'), background='light grey')
     over_select.grid(row=0, column=1, padx=20)
 
@@ -202,7 +202,3 @@ def start_match_singleplayer(name, username):
     login_button.grid(row=0, column=2)
 
     sm.mainloop()
-
-# Batsmen owned,Bowlers owned,wicket keepers owned,all rounders owned,Wickets,Runs,Economy,Innings,
-# Batting Average,Batting Overs,Bowling Overs,Total Overs
-#start = start_img.subsample(5, 5)
