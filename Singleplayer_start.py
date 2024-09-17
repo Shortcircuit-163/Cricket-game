@@ -119,7 +119,7 @@ def start_match_singleplayer(name, username):
 
     wice = tk.Frame(player_info, highlightbackground="black", highlightthickness=6)
     wice.config(background="light grey")
-    wice.grid(row=0, column=4, pady = 20)
+    wice.grid(row=2, column=0, pady = 20)
     wickets_label = Label(wice, text='Wickets', background='light grey', font=('Times New Roman', 20, 'bold'))
     wickets_label.grid(row=0, column=0)
     wickets_value = Label(wice, text=wickets, background='light grey', font=('Times New Roman', 30, 'bold'))
