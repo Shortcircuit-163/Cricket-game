@@ -1,4 +1,5 @@
 import tkinter as tk
+import tkinter
 from tkinter.ttk import *
 from PIL import ImageTk, Image
 import random
@@ -129,13 +130,18 @@ def start_game(bat_or_bowl, selected_players, overs, username):
             widget_list.clear()
 
     runs = 0
+    runs_pc = 0
     run_rate = 0.0
+    run_rate_pc = 0.0
     economy = 0.0
+    economy_pc = 0.0
     wickets = 0
+    wickets_pc = 0
     Batting_Average = 0.0
-    Batting_Overs = 0
-    Bowling_Overs = 0
-    Total_Overs = 0
+    Batting_Average_pc = 0.0
+    Batting_Overs = 0.0
+    Bowling_Overs = 0.0
+    Total_Overs = 0.0
     batting_widgets = []
 
     def save_data(wickets, runs, economy, innings_completed, Batting_Average, Batting_Overs, Bowling_Overs, Total_Overs):
@@ -152,19 +158,58 @@ def start_game(bat_or_bowl, selected_players, overs, username):
                         i[10] = (float(i[10]) + float(economy)) / (float(i[14]) + float(Bowling_Overs))
                         i[11] = int(i[11]) + innings_completed
                         i[12] = (float(i[12]) + float(Batting_Average)) / (float(i[13]) + float(Batting_Overs))
-                        i[13] = int((i[13])) + (Batting_Overs)
-                        i[14] = int((i[14])) + (Bowling_Overs)
-                        i[15] = int(((i[15]))) + (Total_Overs)
+                        i[13] = float((i[13])) + float(Batting_Overs)
+                        i[14] = float((i[14])) + float(Bowling_Overs)
+                        i[15] = float(((i[15]))) + float(Total_Overs)
                         break
 
             with open(r'all_data\user_data.csv', 'w', newline='') as file:
                 writer = csv.writer(file)
                 writer.writerows(rows)
+    
+    def show_final_scores():
 
-    balls_faced = 0
+        win = ''
+        if runs >= runs_pc:
+            win = 'player'
+        else:
+            win = 'computer'
+
+        class Table:
+            
+            def __init__(self,root):
+                
+                # code for creating table
+                for i in range(total_rows):
+                    for j in range(total_columns):
+                        
+                        self.e = Entry(root, width=20, fg='blue',
+                                    font=('Arial',16,'bold'))
+                        
+                        self.e.grid(row=i, column=j)
+                        self.e.insert(END, lst[i][j])
+
+        # take the data
+        lst = [(1,'Raj','Mumbai',19),
+            (2,'Aaryan','Pune',18),
+            (3,'Vaishnavi','Mumbai',20),
+            (4,'Rachna','Mumbai',21),
+            (5,'Shubham','Delhi',21)]
+
+        # find total number of rows and
+        # columns in list
+        total_rows = len(lst)
+        total_columns = len(lst[0])
+
+        # create root window
+        root = Tk()
+        t = Table(root)
+        root.mainloop()
+
 
     def batting():
         
+        balls_faced = 0
 
         current_batsman = player_batting_order[0][0]
         current_bowler = computer_bowling_order[0][0]
@@ -212,14 +257,15 @@ def start_game(bat_or_bowl, selected_players, overs, username):
 
         def submit_bat_choice():
 
-            nonlocal runs, balls_faced, run_rate, current_batsman, current_batsman_rating, current_bowler, innings_completed, ball_type, wickets, runs, economy, Batting_Average, Batting_Overs, Bowling_Overs, Total_Overs
+            nonlocal runs, balls_faced, run_rate, current_batsman, current_batsman_rating, current_bowler, innings_completed, ball_type, wickets, wickets_pc, runs, economy, economy_pc, Batting_Average, Batting_Overs, Bowling_Overs, Total_Overs
 
 
             def bowl_now():
-                nonlocal Batting_Average, Batting_Overs, runs
+                nonlocal Batting_Average, Batting_Overs, runs, economy_pc
 
-                Batting_Average = runs / (overs / 2)
-                Batting_Overs = int(overs / 2)
+                Batting_Overs = float(balls_faced / 6)
+                Batting_Average = float(runs / Batting_Average)                
+                economy_pc = float(runs / Batting_Overs)
                 clear_widgets(batting_widgets)
                 bowling()
 
@@ -229,13 +275,14 @@ def start_game(bat_or_bowl, selected_players, overs, username):
                     # Halfway through the innings
                     innings_completed += 1
                     if innings_completed == 2:
-                        Batting_Average = runs / (overs / 2)
-                        Batting_Overs = int(overs / 2)
-                        Total_Overs = overs
+                        Batting_Overs = float(balls_faced / 6)
+                        Batting_Average = float(runs / Batting_Average)
+                        economy_pc = float(runs / Batting_Overs)
+                        Total_Overs = float(overs)
                         save_data(wickets, runs, economy, innings_completed, Batting_Average, Batting_Overs, Bowling_Overs, Total_Overs)
                         clear_widgets(batting_widgets)
                         tk.messagebox.showinfo("Game Over", "The game has ended. Thanks for playing!")
-                        game.quit()
+                        show_final_scores()
                         return
                     else:
                         bowl_now()
@@ -248,13 +295,14 @@ def start_game(bat_or_bowl, selected_players, overs, username):
                         # All out
                         innings_completed += 1
                         if innings_completed == 2:
-                            Batting_Average = runs / (overs / 2)
-                            Batting_Overs = int(overs / 2)
-                            Total_Overs = overs
+                            Batting_Overs = float(balls_faced / 6)
+                            Batting_Average = float(runs / Batting_Average)
+                            economy_pc = float(runs / Batting_Overs)
+                            Total_Overs = float(overs)
                             save_data(wickets, runs, economy, innings_completed, Batting_Average, Batting_Overs, Bowling_Overs, Total_Overs)
                             clear_widgets(batting_widgets)
                             tk.messagebox.showinfo("Game Over", "The game has ended. Thanks for playing!")
-                            game.quit()
+                            show_final_scores()
                             return
                         else:
                             bowl_now()
@@ -304,6 +352,7 @@ def start_game(bat_or_bowl, selected_players, overs, username):
                 else:
                     # Flash the score
                     flash_score('OUT', flash_label)
+                    wickets_pc += 1
                     balls_faced += 1
                     runs += 0
                     run_rate = (runs / balls_faced) * 6
@@ -315,13 +364,14 @@ def start_game(bat_or_bowl, selected_players, overs, username):
                         # All out
                         innings_completed += 1
                         if innings_completed == 2:
-                            Batting_Average = runs / (overs / 2)
-                            Batting_Overs = int(overs / 2)
-                            Total_Overs = overs
+                            Batting_Overs = float(balls_faced / 6)
+                            Batting_Average = float(runs / Batting_Average)
+                            Total_Overs = float(overs)
+                            economy_pc = float(runs / Batting_Overs)
                             save_data(wickets, runs, economy, innings_completed, Batting_Average, Batting_Overs, Bowling_Overs, Total_Overs)
                             clear_widgets(batting_widgets)
                             tk.messagebox.showinfo("Game Over", "The game has ended. Thanks for playing!")
-                            game.quit()
+                            show_final_scores()
                             return
                         else:
                             bowl_now()
@@ -355,9 +405,7 @@ def start_game(bat_or_bowl, selected_players, overs, username):
     
 
     def bowling():
-        runs_pc = 0
         balls_bowled = 0
-        run_rate_pc = 0.0
         bat_type = '--'
         bowling_widgets = []
 
@@ -404,13 +452,14 @@ def start_game(bat_or_bowl, selected_players, overs, username):
         bat_type = get_bat_type()
 
         def bowl_ball():
-            nonlocal runs_pc, run_rate_pc, balls_bowled, run_rate, current_batsman, current_bowler,current_bowler_rating, innings_completed, bat_type, wickets, runs, economy, Batting_Average, Batting_Overs, Bowling_Overs, Total_Overs
+            nonlocal runs_pc, run_rate_pc, balls_bowled, Batting_Average_pc, run_rate, current_batsman, current_bowler,current_bowler_rating, innings_completed, bat_type, wickets, runs, economy, Batting_Average, Batting_Overs, Bowling_Overs, Total_Overs
 
             def bat_now():
 
-                nonlocal Bowling_Overs, economy
-                Bowling_Overs = int(overs / 2)
-                economy = runs_pc / Bowling_Overs
+                nonlocal Bowling_Overs, economy, runs_pc, Batting_Average_pc
+                Bowling_Overs = float(balls_bowled / 6)
+                economy = float(runs_pc / Bowling_Overs)
+                Batting_Average_pc = float(runs_pc / Bowling_Overs)
 
                 clear_widgets(bowling_widgets)
                 batting()
@@ -424,13 +473,14 @@ def start_game(bat_or_bowl, selected_players, overs, username):
                     # End of innings
                     innings_completed += 1
                     if innings_completed == 2:
-                        Bowling_Overs = int(overs / 2)
-                        Total_Overs = overs
-                        economy = runs_pc / Bowling_Overs
+                        Bowling_Overs = float(balls_bowled / 6)
+                        Total_Overs = float(overs)
+                        economy = float(runs_pc / Bowling_Overs)
+                        Batting_Average_pc = float(runs_pc / Bowling_Overs)
                         save_data(wickets, runs, economy, innings_completed, Batting_Average, Batting_Overs, Bowling_Overs, Total_Overs)
                         clear_widgets(bowling_widgets)
                         tk.messagebox.showinfo("Game Over", "The game has ended. Thanks for playing!")
-                        game.quit()
+                        show_final_scores()
                         return
                     else:
                         bat_now()
@@ -444,13 +494,14 @@ def start_game(bat_or_bowl, selected_players, overs, username):
                     if current_batsman == 'All out':
                         innings_completed += 1
                         if innings_completed == 2:
-                            Bowling_Overs = int(overs / 2)
-                            Total_Overs = overs
-                            economy = runs_pc / Bowling_Overs
+                            Bowling_Overs = float(balls_bowled / 6)
+                            Total_Overs = float(overs)
+                            economy = float(runs_pc / Bowling_Overs)
+                            Batting_Average_pc = float(runs_pc / Bowling_Overs)
                             save_data(wickets, runs, economy, innings_completed, Batting_Average, Batting_Overs, Bowling_Overs, Total_Overs)
                             clear_widgets(bowling_widgets)
                             tk.messagebox.showinfo("Game Over", "The game has ended. Thanks for playing!")
-                            game.quit()
+                            show_final_scores()
                             return
                         else:
                             bat_now()
@@ -475,17 +526,19 @@ def start_game(bat_or_bowl, selected_players, overs, username):
                 if random_number < adjusted_probability:
                     flash_score('OUT', flash_label)
                     wickets += 1
+                    run_rate_pc = (runs_pc / balls_bowled) * 6
                     current_batsman = get_next_batsman_computer()[0]
                     if current_batsman == 'All out':
                         innings_completed += 1
                         if innings_completed == 2:
-                            Bowling_Overs = int(overs / 2)
+                            Bowling_Overs = float(balls_bowled / 6)
                             economy = runs_pc / Bowling_Overs
-                            Total_Overs = overs
+                            Total_Overs = float(overs)
+                            Batting_Average_pc = float(runs_pc / Bowling_Overs)
                             save_data(wickets, runs, economy, innings_completed, Batting_Average, Batting_Overs, Bowling_Overs, Total_Overs)
                             clear_widgets(bowling_widgets)
                             tk.messagebox.showinfo("Game Over", "The game has ended. Thanks for playing!")
-                            game.quit()
+                            show_final_scores()
                             return
                         else:
                             bat_now()
@@ -497,6 +550,7 @@ def start_game(bat_or_bowl, selected_players, overs, username):
                     else:
                         hit = random.choice([0, 1, 4, 6])
                     runs_pc += hit
+                    run_rate_pc = (runs_pc / balls_bowled) * 6
                     run_rate_pc = (runs / balls_bowled) * 6
                     if hit == 0:
                         flash_score('dot ball', flash_label)
