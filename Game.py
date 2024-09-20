@@ -1,5 +1,5 @@
 import tkinter as tk
-import tkinter
+from tkinter import Entry, END
 from tkinter.ttk import *
 from PIL import ImageTk, Image
 import random
@@ -11,7 +11,7 @@ def start_game(bat_or_bowl, selected_players, overs, username):
 
     game = tk.Tk()
     game.title(f"Quicket-Singleplayer_{overs}-overs_{bat_or_bowl}")
-    game.geometry('1000x600')
+    game.geometry('1100x600')
     game.resizable(False, False)
     p1 = tk.PhotoImage(file=r'images\home\quicket.png')
     game.iconphoto(True, p1)
@@ -167,44 +167,72 @@ def start_game(bat_or_bowl, selected_players, overs, username):
                 writer = csv.writer(file)
                 writer.writerows(rows)
     
-    def show_final_scores():
+    def show_final_scores(player_batting_order, computer_batting_order):
+        nonlocal runs, runs_pc, run_rate, run_rate_pc, wickets, wickets_pc, economy, economy_pc, Batting_Average, Batting_Average_pc, Batting_Overs, Bowling_Overs, Total_Overs, bat_or_bowl
 
-        win = ''
+        win_player = ''
+        win_pc = ''
+
+        # Determine the winner
         if runs >= runs_pc:
-            win = 'player'
+            if bat_or_bowl == 'bowl':
+                win_player = f'You have won by {11 - len(player_batting_order)} wickets!'
+                win_pc = f'Lost. Player beat the target with {11 - len(player_batting_order)} wickets remaining!'
+            else:
+                win_player = f'You have won by {runs - runs_pc} runs!'
+                win_pc = f'Lost. Fell short of {runs - runs_pc} runs!'
         else:
-            win = 'computer'
+            if bat_or_bowl == 'bowl':
+                win_player = f'Lost. You fell short of {runs_pc - runs} runs!'
+                win_pc = f'Won by {runs_pc - runs} runs!'
+            else:
+                win_player = f'Lost. Computer beat your target with {11 - len(computer_batting_order)} wickets remaining!'
+                win_pc = f'Won by {11 - len(computer_batting_order)} wickets!'
 
-        class Table:
-            
-            def __init__(self,root):
-                
-                # code for creating table
-                for i in range(total_rows):
-                    for j in range(total_columns):
-                        
-                        self.e = Entry(root, width=20, fg='blue',
-                                    font=('Arial',16,'bold'))
-                        
-                        self.e.grid(row=i, column=j)
-                        self.e.insert(END, lst[i][j])
+        # List for table data
+        lst = [
+            ('STATS', 'PLAYER', 'COMPUTER'),
+            ('WINNER:', win_player, win_pc),
+            ('Runs:', runs, runs_pc),
+            ('Run Rate:', run_rate, run_rate_pc),
+            ('Wickets:', wickets, wickets_pc),
+            ('Economy:', economy, economy_pc),
+            ('Batting Average:', Batting_Average, Batting_Average_pc),
+            ('Batting Overs:', Batting_Overs, Batting_Overs),
+            ('Bowling Overs:', Bowling_Overs, Bowling_Overs),
+            ('Total Overs:', Total_Overs, Total_Overs)
+        ]
 
-        # take the data
-        lst = [(1,'Raj','Mumbai',19),
-            (2,'Aaryan','Pune',18),
-            (3,'Vaishnavi','Mumbai',20),
-            (4,'Rachna','Mumbai',21),
-            (5,'Shubham','Delhi',21)]
-
-        # find total number of rows and
-        # columns in list
         total_rows = len(lst)
         total_columns = len(lst[0])
 
-        # create root window
-        root = Tk()
-        t = Table(root)
-        root.mainloop()
+        colours = ['#AFEEEE', '#F5FFFA', '#FFF0F5', '#F0FFF0', '#FFE4E1', '#FFFACD', '#FAFAD2', '#F0F8FF']
+        #'Light_Coral' : '#F08080' taken for 1st row
+
+        # Table class
+        class Table:
+            def __init__(self, root):
+                x = -2
+                for i in range(total_rows):
+                    for j in range(total_columns):
+                        colour = colours[x]
+                        if i == 0:  # For the header
+                            self.e = tk.Label(root, width=20, height=3, foreground='white', background='dark grey',
+                                              font=('Arial', 20, 'bold'), anchor='w', padx=10)
+                        elif i == 1:  # For the row with the win/loss messages
+                            self.e = tk.Label(root, width=20, height=2, wraplength=300, background='#F08080',
+                                              font=('Arial', 16, 'bold'), anchor='w', padx=10)
+                        else:
+                            self.e = tk.Label(root, width=20, height=2, background=colour, font=('Arial', 16), anchor='w', padx=10)
+                        
+                        self.e.grid(row=i, column=j, sticky='nsew')  # sticky option to stretch widgets
+                        self.e.config(text=lst[i][j])
+                
+                    x += 1
+
+        # Create the table in the 'game' window
+        table = Table(game)
+
 
 
     def batting():
@@ -257,14 +285,14 @@ def start_game(bat_or_bowl, selected_players, overs, username):
 
         def submit_bat_choice():
 
-            nonlocal runs, balls_faced, run_rate, current_batsman, current_batsman_rating, current_bowler, innings_completed, ball_type, wickets, wickets_pc, runs, economy, economy_pc, Batting_Average, Batting_Overs, Bowling_Overs, Total_Overs
+            nonlocal player_batting_order, computer_batting_order, runs, balls_faced, run_rate, current_batsman, current_batsman_rating, current_bowler, innings_completed, ball_type, wickets, wickets_pc, runs, economy, economy_pc, Batting_Average, Batting_Overs, Bowling_Overs, Total_Overs
 
 
             def bowl_now():
                 nonlocal Batting_Average, Batting_Overs, runs, economy_pc
 
                 Batting_Overs = float(balls_faced / 6)
-                Batting_Average = float(runs / Batting_Average)                
+                Batting_Average = float(runs / Batting_Overs)                
                 economy_pc = float(runs / Batting_Overs)
                 clear_widgets(batting_widgets)
                 bowling()
@@ -276,13 +304,13 @@ def start_game(bat_or_bowl, selected_players, overs, username):
                     innings_completed += 1
                     if innings_completed == 2:
                         Batting_Overs = float(balls_faced / 6)
-                        Batting_Average = float(runs / Batting_Average)
+                        Batting_Average = float(runs / Batting_Overs)
                         economy_pc = float(runs / Batting_Overs)
                         Total_Overs = float(overs)
                         save_data(wickets, runs, economy, innings_completed, Batting_Average, Batting_Overs, Bowling_Overs, Total_Overs)
                         clear_widgets(batting_widgets)
                         tk.messagebox.showinfo("Game Over", "The game has ended. Thanks for playing!")
-                        show_final_scores()
+                        show_final_scores(player_batting_order, computer_batting_order)
                         return
                     else:
                         bowl_now()
@@ -296,13 +324,13 @@ def start_game(bat_or_bowl, selected_players, overs, username):
                         innings_completed += 1
                         if innings_completed == 2:
                             Batting_Overs = float(balls_faced / 6)
-                            Batting_Average = float(runs / Batting_Average)
+                            Batting_Average = float(runs / Batting_Overs)
                             economy_pc = float(runs / Batting_Overs)
                             Total_Overs = float(overs)
                             save_data(wickets, runs, economy, innings_completed, Batting_Average, Batting_Overs, Bowling_Overs, Total_Overs)
                             clear_widgets(batting_widgets)
                             tk.messagebox.showinfo("Game Over", "The game has ended. Thanks for playing!")
-                            show_final_scores()
+                            show_final_scores(player_batting_order, computer_batting_order)
                             return
                         else:
                             bowl_now()
@@ -320,7 +348,7 @@ def start_game(bat_or_bowl, selected_players, overs, username):
                 # Disable Bat button for 2 secs
                 bat_button.config(state=tk.DISABLED)
 
-                # After 3 seconds, enable Bat button and allow player to choose shot
+                # After 2 seconds, enable Bat button and allow player to choose shot
                 game.after(2000, lambda: bat_button.config(state=tk.NORMAL))
             
                 # Scale the rating to influence the probability (90+ gives a higher probability of success)
@@ -365,13 +393,13 @@ def start_game(bat_or_bowl, selected_players, overs, username):
                         innings_completed += 1
                         if innings_completed == 2:
                             Batting_Overs = float(balls_faced / 6)
-                            Batting_Average = float(runs / Batting_Average)
+                            Batting_Average = float(runs / Batting_Overs)
                             Total_Overs = float(overs)
                             economy_pc = float(runs / Batting_Overs)
                             save_data(wickets, runs, economy, innings_completed, Batting_Average, Batting_Overs, Bowling_Overs, Total_Overs)
                             clear_widgets(batting_widgets)
                             tk.messagebox.showinfo("Game Over", "The game has ended. Thanks for playing!")
-                            show_final_scores()
+                            show_final_scores(player_batting_order, computer_batting_order)
                             return
                         else:
                             bowl_now()
@@ -452,7 +480,7 @@ def start_game(bat_or_bowl, selected_players, overs, username):
         bat_type = get_bat_type()
 
         def bowl_ball():
-            nonlocal runs_pc, run_rate_pc, balls_bowled, Batting_Average_pc, run_rate, current_batsman, current_bowler,current_bowler_rating, innings_completed, bat_type, wickets, runs, economy, Batting_Average, Batting_Overs, Bowling_Overs, Total_Overs
+            nonlocal player_batting_order, computer_batting_order, runs_pc, run_rate_pc, balls_bowled, Batting_Average_pc, run_rate, current_batsman, current_bowler,current_bowler_rating, innings_completed, bat_type, wickets, runs, economy, Batting_Average, Batting_Overs, Bowling_Overs, Total_Overs
 
             def bat_now():
 
@@ -480,7 +508,7 @@ def start_game(bat_or_bowl, selected_players, overs, username):
                         save_data(wickets, runs, economy, innings_completed, Batting_Average, Batting_Overs, Bowling_Overs, Total_Overs)
                         clear_widgets(bowling_widgets)
                         tk.messagebox.showinfo("Game Over", "The game has ended. Thanks for playing!")
-                        show_final_scores()
+                        show_final_scores(player_batting_order, computer_batting_order)
                         return
                     else:
                         bat_now()
@@ -501,7 +529,7 @@ def start_game(bat_or_bowl, selected_players, overs, username):
                             save_data(wickets, runs, economy, innings_completed, Batting_Average, Batting_Overs, Bowling_Overs, Total_Overs)
                             clear_widgets(bowling_widgets)
                             tk.messagebox.showinfo("Game Over", "The game has ended. Thanks for playing!")
-                            show_final_scores()
+                            show_final_scores(player_batting_order, computer_batting_order)
                             return
                         else:
                             bat_now()
@@ -538,7 +566,7 @@ def start_game(bat_or_bowl, selected_players, overs, username):
                             save_data(wickets, runs, economy, innings_completed, Batting_Average, Batting_Overs, Bowling_Overs, Total_Overs)
                             clear_widgets(bowling_widgets)
                             tk.messagebox.showinfo("Game Over", "The game has ended. Thanks for playing!")
-                            show_final_scores()
+                            show_final_scores(player_batting_order, computer_batting_order)
                             return
                         else:
                             bat_now()
@@ -551,7 +579,6 @@ def start_game(bat_or_bowl, selected_players, overs, username):
                         hit = random.choice([0, 1, 4, 6])
                     runs_pc += hit
                     run_rate_pc = (runs_pc / balls_bowled) * 6
-                    run_rate_pc = (runs / balls_bowled) * 6
                     if hit == 0:
                         flash_score('dot ball', flash_label)
                     else:
