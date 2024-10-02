@@ -8,7 +8,7 @@ import random
 def pre_game(username, name, overs):
     pre_game = tk.Tk()
     pre_game.title("Quicket-Singleplayer")
-    pre_game.geometry('1300x600')
+    pre_game.geometry('470x190')
     pre_game.resizable(False, False)
     pre_game.configure(background='light grey')
     p1 = tk.PhotoImage(file=r'images\home\quicket.png')
@@ -55,6 +55,8 @@ def pre_game(username, name, overs):
         
     
     def players_select():
+        pre_game.geometry('1200x600')
+        toss_frame.config(background='light blue')
         def submit_selection():
             player_composition = []
             # Check and gather the selections
@@ -137,10 +139,10 @@ def pre_game(username, name, overs):
         all_widgets = []
 
         # Headings for each listbox
-        tk.Label(toss_frame, text="Batsmen", font=('calibre', 15, 'bold'), background='grey').grid(row=0, column=0, sticky='w')
-        tk.Label(toss_frame, text="Bowlers", font=('calibre', 15, 'bold'), background='grey').grid(row=0, column=2, sticky='w')
-        tk.Label(toss_frame, text="Wicketkeepers", font=('calibre', 15, 'bold'), background='grey').grid(row=0, column=4, sticky='w')
-        tk.Label(toss_frame, text="All-rounders", font=('calibre', 15, 'bold'), background='grey').grid(row=0, column=6, sticky='w')
+        tk.Label(toss_frame, text="Batsmen", font=('calibre', 15, 'bold'), background='blue').grid(row=0, column=0, sticky='nsew')
+        tk.Label(toss_frame, text="Bowlers", font=('calibre', 15, 'bold'), background='blue').grid(row=0, column=2, sticky='nsew')
+        tk.Label(toss_frame, text="Wicketkeepers", font=('calibre', 15, 'bold'), background='blue').grid(row=0, column=4, sticky='nsew')
+        tk.Label(toss_frame, text="All-rounders", font=('calibre', 15, 'bold'), background='blue').grid(row=0, column=6, sticky='nsew')
 
         # Listbox for batsmen
         listbox_bat = tk.Listbox(toss_frame, selectmode=tk.MULTIPLE, height=15, font=('calibre', 15), exportselection=False)
@@ -199,8 +201,10 @@ def pre_game(username, name, overs):
         all_widgets.append(scrollbar_ar)
 
         # Submit button
-        submit_button = tk.Button(toss_frame, text="Submit Selection", command=submit_selection, font=('calibre', 15, 'bold'), background='grey')
-        submit_button.grid(row=2, column=3, columnspan=2, pady=20)
+        global btn_image
+        btn_image = tk.PhotoImage(file=r'images\pre_game\submit_btn.png')
+        submit_button = tk.Button(toss_frame, image=btn_image, command=submit_selection, borderwidth=0, background='light blue')
+        submit_button.grid(row=3, column=6, pady=0)
         all_widgets.append(submit_button)
 
     choice_var = tk.StringVar()
@@ -228,23 +232,33 @@ def pre_game(username, name, overs):
         print(f"User is {bat_or_bowl}ing")
         players_select()
 
-    info = f"Hello {name}, -- Current game: {str(overs)} match"
-    heading = Label(pre_game, text=info, font=('Times New Roman', 50, 'bold', 'underline'), background='light grey')
-    heading.grid(row=0, column=0, pady=20)
+    
+    # info = f"""Hello {name}!
+    # You are playing a {str(overs)} match"""
+    # heading = Label(pre_game, text=info, font=('Times New Roman', 50, 'bold', 'underline'), background='light grey')
+    # heading.grid(row=0, column=0, pady=20)
 
-    toss_frame = tk.Frame(pre_game, background='light grey')
-    toss_frame.grid(row=1, column=0, sticky='w')
 
-    choice_entry_label = tk.Label(toss_frame, text='Choose heads or tails:', font=('calibre', 20, 'bold'), background='light grey')
-    choice_entry_label.grid(row=0, column=0, sticky='w')
+    pre_game.columnconfigure(0, weight=1)
+    pre_game.rowconfigure(0, weight=1)
+    pre_game.rowconfigure(1, weight=1)
+    pre_game.columnconfigure(1, weight=1)
+    pre_game.rowconfigure(2, weight=1)
+    pre_game.columnconfigure(2, weight=1)
+
+    toss_frame = tk.Frame(pre_game, background='#FFE4E1', highlightbackground="black", highlightthickness=6)
+    toss_frame.grid(row=1, column=1, sticky='nsew')
+
+    choice_entry_label = tk.Label(toss_frame, text='Choose heads or tails:', font=('calibre', 20, 'bold'), background='#FFE4E1')
+    choice_entry_label.grid(row=0, column=0, sticky='nsew', pady=10, padx=10)
 
     toss_list = ['heads', 'tails']
-    choice_dropdown = Combobox(toss_frame, textvariable=choice_var, values=toss_list, state="readonly", font=('calibre', 19, 'bold'), background='light grey')
-    choice_dropdown.grid(row=0, column=1, sticky='w')
+    choice_dropdown = Combobox(toss_frame, textvariable=choice_var, values=toss_list, state="readonly", font=('calibre', 19, 'bold'), background='#FFE4E1')
+    choice_dropdown.grid(row=1, column=0, sticky='nsew', pady=10, padx=10)
 
-    choose = tk.PhotoImage(file=r'images\game_window\tick.png')
-    choose_button = tk.Button(toss_frame, image=choose, command=toss_outcome, borderwidth=0, background='light grey')
-    choose_button.grid(row=0, column=2, pady=20)
+    choose = tk.PhotoImage(file=r'images\pre_game\tick.png')
+    choose_button = tk.Button(toss_frame, image=choose, command=toss_outcome, borderwidth=0, background='#FFE4E1')
+    choose_button.grid(row=1, column=1, pady=10)
 
     pre_game.mainloop()
 
