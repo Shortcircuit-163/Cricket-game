@@ -52,7 +52,7 @@ def signup_window():
         
         if check_username_taken() == False:
 
-            new_player_credentials = [name, username, password, 0, 4, 3, 1, 3, 0, 0, 0, 0, 0, 0, 0, 0]
+            new_player_credentials = [name, username, password, 0, 4, 3, 1, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
             append_player_data =  open(r'all_data\user_data.csv', 'a', newline='')
             datawriter = csv.writer(append_player_data)

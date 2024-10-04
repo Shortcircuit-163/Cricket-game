@@ -74,16 +74,14 @@ def start_match_singleplayer(name, username):
                     wickets = row[8]               
                     runs = row[9]              
                     economy = row[10]              
-                    innings = row[11]               
-                    batting_average = row[12]                            
-                    batting_overs = row[13]               
-                    bowling_overs = row[14]              
+                    innings = row[11]                             
                     total_overs = row[15]
-                    all_data = [balance_return, batsmen_owned, bowlers_owned, wicket_keepers_owned, all_rounders_owned, wickets, runs, economy, innings, batting_average, batting_overs, bowling_overs, total_overs]
+                    games_won = row[16]
+                    all_data = [balance_return, batsmen_owned, bowlers_owned, wicket_keepers_owned, all_rounders_owned, wickets, runs, economy, innings, total_overs, games_won]
                     return all_data
 
     
-    balance_return, batsmen_owned, bowlers_owned, wicket_keepers_owned, all_rounders_owned, wickets, runs, economy, innings, batting_average, batting_overs, bowling_overs, total_overs = return_playerdata()[0], return_playerdata()[1], return_playerdata()[2], return_playerdata()[3], return_playerdata()[4], return_playerdata()[5], return_playerdata()[6], return_playerdata()[7], return_playerdata()[8], return_playerdata()[9], return_playerdata()[10], return_playerdata()[11], return_playerdata()[12]
+    balance_return, batsmen_owned, bowlers_owned, wicket_keepers_owned, all_rounders_owned, wickets, runs, economy, innings, total_overs, games_won = return_playerdata()[0], return_playerdata()[1], return_playerdata()[2], return_playerdata()[3], return_playerdata()[4], return_playerdata()[5], return_playerdata()[6], return_playerdata()[7], return_playerdata()[8], return_playerdata()[9], return_playerdata()[10]
 
     bat = tk.Frame(player_info, highlightbackground="black", highlightthickness=6, background='light grey')
     bat.config(background="light grey")
@@ -149,13 +147,13 @@ def start_match_singleplayer(name, username):
     total_overs_value = Label(tot, text=total_overs, background='grey', font=('Times New Roman', 30, 'bold'))
     total_overs_value.grid(row=1, column=0)
 
-    batt = tk.Frame(player_info, highlightbackground="black", highlightthickness=6)
-    batt.config(background="light grey")
-    batt.grid(row=1, column=3)
-    batting_avg = Label(batt, text='Games Won', background='light grey', font=('Times New Roman', 20, 'bold'))
-    batting_avg.grid(row=0, column=0)
-    batting_avg_value = Label(batt, text=batting_average, background='light grey', font=('Times New Roman', 30, 'bold'))
-    batting_avg_value.grid(row=1, column=0)
+    gms_won = tk.Frame(player_info, highlightbackground="black", highlightthickness=6)
+    gms_won.config(background="light grey")
+    gms_won.grid(row=1, column=3)
+    gms_won_label = Label(gms_won, text='Games Won', background='light grey', font=('Times New Roman', 20, 'bold'))
+    gms_won_label.grid(row=0, column=0)
+    gms_won_value = Label(gms_won, text=games_won, background='light grey', font=('Times New Roman', 30, 'bold'))
+    gms_won_value.grid(row=1, column=0)
 
     inn = tk.Frame(player_info, highlightbackground="black", highlightthickness=6)
     inn.config(background="dark grey")

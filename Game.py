@@ -11,11 +11,14 @@ def start_game(bat_or_bowl, selected_players, overs, username):
 
     game = tk.Tk()
     game.title(f"Quicket-Singleplayer_{overs}-overs_{bat_or_bowl}")
-    game.geometry('1050x600')
+    game.geometry('1150x600')
     game.resizable(False, False)
     game.configure(background='light grey')
     p1 = tk.PhotoImage(file=r'images\home\quicket.png')
     game.iconphoto(True, p1)
+    game.columnconfigure(0, minsize=400)
+    game.columnconfigure(1, minsize=400)
+    game.columnconfigure(2, minsize=400)
 
     # setting batting and bowling order for computer
     computer_batsmen_unpicked = []
@@ -151,6 +154,10 @@ def start_game(bat_or_bowl, selected_players, overs, username):
                 reader = csv.reader(file)
                 for row in reader:
                     rows.append(row)
+                
+                player_win = False
+                if runs >= runs_pc:
+                    player_win = True
 
                 for i in rows:
                     if i[1] == username:
@@ -162,6 +169,7 @@ def start_game(bat_or_bowl, selected_players, overs, username):
                         i[13] = float((i[13])) + float(Batting_Overs)
                         i[14] = float((i[14])) + float(Bowling_Overs)
                         i[15] = float(((i[15]))) + float(Total_Overs)
+                        i[16] = int(i[16]) + 1 if player_win else int(i[16])
                         break
 
             with open(r'all_data\user_data.csv', 'w', newline='') as file:
@@ -245,54 +253,54 @@ def start_game(bat_or_bowl, selected_players, overs, username):
         current_batsman_rating = player_batting_order[0][1]
 
         # Live labels for batting
-        balls_faced_frame = tk.Frame(game, highlightbackground="black", highlightthickness=6, width=200, height=150)
+        balls_faced_frame = tk.Frame(game, highlightbackground="black", highlightthickness=6, width=300, height=150)
         balls_faced_frame.config(background='#F0FFF0')
         balls_faced_label = tk.Label(balls_faced_frame, text=f"Balls Faced: {balls_faced}", font=('calibre', 20, 'bold'), background='#F0FFF0')
         balls_faced_label.pack()
         balls_faced_frame.grid(row=1, column=2, padx=20, pady=40)
         batting_widgets.append(balls_faced_frame)
 
-        current_batsman_frame = tk.Frame(game, highlightbackground="black", highlightthickness=6, width=200, height=150)
+        current_batsman_frame = tk.Frame(game, highlightbackground="black", highlightthickness=6, width=300, height=150)
         current_batsman_frame.config(background='#FFF0F5')
         current_batsman_label = tk.Label(current_batsman_frame, background='#FFF0F5', text=f"Current Batsman: {current_batsman}", font=('calibre', 20, 'bold'))
         current_batsman_label.pack()
         current_batsman_frame.grid(row=0, column=0, padx=20, pady=40)
-        batting_widgets.append(current_batsman_label)
+        batting_widgets.append(current_batsman_frame)
 
-        current_bowler_frame = tk.Frame(game, highlightbackground="black", highlightthickness=6, width=200, height=150)
+        current_bowler_frame = tk.Frame(game, highlightbackground="black", highlightthickness=6, width=300, height=150)
         current_bowler_frame.config(background='#F0FFF0')
         current_bowler_label = tk.Label(current_bowler_frame, background='#F0FFF0', text=f"Current Bowler: {current_bowler}", font=('calibre', 20, 'bold'))
         current_bowler_label.pack()
         current_bowler_frame.grid(row=1, column=0, padx=20, pady=40)
-        batting_widgets.append(current_bowler_label)
+        batting_widgets.append(current_bowler_frame)
 
-        runs_label_frame = tk.Frame(game, highlightbackground="black", highlightthickness=6, width=200, height=150)
+        runs_label_frame = tk.Frame(game, highlightbackground="black", highlightthickness=6, width=300, height=150)
         runs_label_frame.config(background='#AFEEEE')
         runs_label = tk.Label(runs_label_frame, text=f"Runs: {runs}", font=('calibre', 20, 'bold'), background='#AFEEEE')
         runs_label.pack()
         runs_label_frame.grid(row=0, column=1, padx=20, pady=40)
-        batting_widgets.append(runs_label)
+        batting_widgets.append(runs_label_frame)
 
-        run_rate_label_frame = tk.Frame(game, highlightbackground="black", highlightthickness=6, width=200, height=150)
+        run_rate_label_frame = tk.Frame(game, highlightbackground="black", highlightthickness=6, width=300, height=150)
         run_rate_label_frame.config(background='#FFE4E1')
         run_rate_label = tk.Label(run_rate_label_frame, text=f"Run Rate: {run_rate:.2f}", font=('calibre', 20, 'bold'), background='#FFE4E1')
         run_rate_label.pack()
         run_rate_label_frame.grid(row=0, column=2, padx=20, pady=40)
-        batting_widgets.append(run_rate_label)
+        batting_widgets.append(run_rate_label_frame)
 
-        ball_type_frame = tk.Frame(game, highlightbackground="black", highlightthickness=6, width=200, height=150)
+        ball_type_frame = tk.Frame(game, highlightbackground="black", highlightthickness=6, width=300, height=150)
         ball_type_frame.config(background='#FAFAD2')
         ball_type_label = tk.Label(ball_type_frame, text="Ball Type:", font=('calibre', 20, 'bold'), background='#FAFAD2')
         ball_type_label.pack()
         ball_type_frame.grid(row=1, column=1, padx=20, pady=40)
-        batting_widgets.append(ball_type_label)
+        batting_widgets.append(ball_type_frame)
 
-        flash_label_frame = tk.Frame(game, highlightbackground="red", highlightthickness=6, width=200, height=150)
+        flash_label_frame = tk.Frame(game, highlightbackground="red", highlightthickness=6, width=300, height=150)
         flash_label_frame.config(background='light grey')
-        flash_label = tk.Label(flash_label_frame, text="", font=('calibre', 40, 'bold'), fg='red', background='light grey')
+        flash_label = tk.Label(flash_label_frame, text="----", font=('calibre', 40, 'bold'), fg='red', background='light grey')
         flash_label.pack()
         flash_label_frame.grid(row=2, column=1, padx=20, pady=40)
-        batting_widgets.append(flash_label)
+        batting_widgets.append(flash_label_frame)
 
         def get_ball_type():
             ball_type = random.choice(ball_types)
@@ -311,7 +319,7 @@ def start_game(bat_or_bowl, selected_players, overs, username):
             current_bowler_label.config(text=f"Current Bowler: {current_bowler}")
 
 
-        def submit_bat_choice():
+        def submit_bat_choice(bat):
 
             nonlocal player_batting_order, computer_batting_order, runs, balls_faced, run_rate, current_batsman, current_batsman_rating, current_bowler, innings_completed, ball_type, wickets, wickets_pc, runs, economy, economy_pc, Batting_Average, Batting_Overs, Bowling_Overs, Total_Overs
 
@@ -382,7 +390,7 @@ def start_game(bat_or_bowl, selected_players, overs, username):
                 # Scale the rating to influence the probability (90+ gives a higher probability of success)
                 rating_factor = 1 + ((float(current_batsman_rating) - 90.0)) / 10  # rating_factor > 1 if rating > 90
 
-                selected_bat_type = bat_type_var.get()
+                selected_bat_type = bat
                 probability = probabilities[ball_type.lower()][selected_bat_type.lower()]
                 adjusted_probability = probability / rating_factor
                 random_number = random.uniform(0, 1)
@@ -448,14 +456,16 @@ def start_game(bat_or_bowl, selected_players, overs, username):
             except tk.TclError:
                 pass
 
-        # Drop-down to select bat type
-        bat_type_var = tk.StringVar()
-        bat_type_dropdown = Combobox(game, textvariable=bat_type_var, values=bat_types, state="readonly", font=('calibre', 20, 'bold'))
-        bat_type_dropdown.grid(row=3, column=1)
-        batting_widgets.append(bat_type_dropdown)
+        # Bat type buttons
+        bat_btns_frame = tk.Frame(game)
+        cut_shot_img = Image.open(r'images\game\bat_butons\cut.png')
+        cut_shot = ImageTk.PhotoImage(cut_shot_img)
+        cut_btn = Button(bat_btns_frame, image=cut_shot, style='A.TButton', command=submit_bat_choice('Cut'))
+        cut_btn.grid(row=0, column=1)
+        batting_widgets.append(ball_type_frame) #working here--------------------
 
         # Button to submit the bat choice
-        bat_button = tk.Button(game, text="Bat", command=submit_bat_choice, font=('calibre', 20, 'bold'))
+        bat_button = tk.Button(game, text="Bat", command=submit_bat_choice(bat), font=('calibre', 20, 'bold'))
         bat_button.grid(row=4, column=1)
         batting_widgets.append(bat_button)
     
@@ -471,27 +481,54 @@ def start_game(bat_or_bowl, selected_players, overs, username):
         current_bowler_rating = player_bowling_order[0][2]
 
         # Live labels for bowling
-        balls_bowled_label = tk.Label(game, text=f"Balls Bowled: {balls_bowled}", font=('calibre', 20, 'bold'))
+        balls_bowled_label_frame = tk.Frame(game, highlightbackground="black", highlightthickness=6, width=300, height=150)
+        balls_bowled_label_frame.config(background='#F0FFF0')
+        balls_bowled_label = tk.Label(balls_bowled_label_frame, text=f"Balls Bowled: {balls_bowled}", font=('calibre', 20, 'bold'))
         balls_bowled_label.pack()
-        bowling_widgets.append(balls_bowled_label)
-        current_batsman_label = tk.Label(game, text=f"Current Batsman: {current_batsman}", font=('calibre', 20, 'bold'))
+        balls_bowled_label_frame.grid(row=1, column=2, padx=20, pady=40)
+        bowling_widgets.append(balls_bowled_label_frame)
+
+        current_batsman_frame = tk.Frame(game, highlightbackground="black", highlightthickness=6, width=300, height=150)
+        current_batsman_frame.config(background='#FFF0F5')
+        current_batsman_label = tk.Label(current_batsman_frame, text=f"Current Batsman: {current_batsman}", font=('calibre', 20, 'bold'), background='#FFF0F5')
         current_batsman_label.pack()
-        bowling_widgets.append(current_batsman_label)
-        current_bowler_label = tk.Label(game, text=f"Current Bowler: {current_bowler}", font=('calibre', 20, 'bold'))
+        current_batsman_frame.grid(row=0, column=0, padx=20, pady=40)
+        bowling_widgets.append(current_batsman_frame)
+
+        current_bowler_frame = tk.Frame(game, highlightbackground="black", highlightthickness=6, width=300, height=150)
+        current_bowler_frame.config(background='#F0FFF0')
+        current_bowler_label = tk.Label(current_bowler_frame, text=f"Current Bowler: {current_bowler}", font=('calibre', 20, 'bold'), background='#F0FFF0')
         current_bowler_label.pack()
-        bowling_widgets.append(current_bowler_label)
-        runs_scored_label = tk.Label(game, text=f"Runs: {runs_pc}", font=('calibre', 20, 'bold'))
+        current_bowler_frame.grid(row=1, column=0, padx=20, pady=40)
+        bowling_widgets.append(current_bowler_frame)
+
+        runs_scored_label_frame = tk.Frame(game, highlightbackground="black", highlightthickness=6, width=300, height=150)
+        runs_scored_label_frame.config(background='#AFEEEE')
+        runs_scored_label = tk.Label(runs_scored_label_frame, text=f"Runs: {runs_pc}", font=('calibre', 20, 'bold') , background='#AFEEEE')
         runs_scored_label.pack()
-        bowling_widgets.append(runs_scored_label)
-        run_rate_pc_label_bowling = tk.Label(game, text=f"Run Rate: {run_rate_pc:.2f}", font=('calibre', 20, 'bold'))
+        runs_scored_label_frame.grid(row=0, column=1, padx=20, pady=40)
+        bowling_widgets.append(runs_scored_label_frame)
+
+        run_rate_pc_label_frame = tk.Frame(game, highlightbackground="black", highlightthickness=6, width=300, height=150)
+        run_rate_pc_label_frame.config(background='#FFE4E1')
+        run_rate_pc_label_bowling = tk.Label(run_rate_pc_label_frame, text=f"Run Rate: {run_rate_pc:.2f}", font=('calibre', 20, 'bold'), background='#FFE4E1')
         run_rate_pc_label_bowling.pack()
-        bowling_widgets.append(run_rate_pc_label_bowling)
-        bat_type_label = tk.Label(game, text=f"Bat Type: {bat_type}", font=('calibre', 20, 'bold'))
+        run_rate_pc_label_frame.grid(row=0, column=2, padx=20, pady=40)
+        bowling_widgets.append(run_rate_pc_label_frame)
+
+        bat_type_frame = tk.Frame(game, highlightbackground="black", highlightthickness=6, width=300, height=150)
+        bat_type_frame.config(background='#FAFAD2')
+        bat_type_label = tk.Label(bat_type_frame, text=f"Shot Played: {bat_type}", font=('calibre', 20, 'bold'), background='#FAFAD2')
         bat_type_label.pack()
-        bowling_widgets.append(bat_type_label)
-        flash_label = tk.Label(game, text="", font=('calibre', 40, 'bold'), fg='red')
+        bat_type_frame.grid(row=1, column=1, padx=20, pady=40)
+        bowling_widgets.append(bat_type_frame)
+
+        flash_label_frame = tk.Frame(game, highlightbackground="red", highlightthickness=6, width=300, height=150)
+        flash_label_frame.config(background='light grey')
+        flash_label = tk.Label(flash_label_frame, text="----", font=('calibre', 40, 'bold'), fg='red')
         flash_label.pack()
-        bowling_widgets.append(flash_label)
+        flash_label_frame.grid(row=2, column=1, padx=20, pady=40)
+        bowling_widgets.append(flash_label_frame)
 
         def update_bowling_labels():
             # Update all live labels for bowling
@@ -521,7 +558,7 @@ def start_game(bat_or_bowl, selected_players, overs, username):
                 batting()
 
             # Reset flash label immediately
-            flash_label.config(text="")
+            flash_label.config(text="----")
 
             # Check if innings are over
             if balls_bowled % 6 == 0:
@@ -580,7 +617,7 @@ def start_game(bat_or_bowl, selected_players, overs, username):
 
                 # Determine if the computer batsman is out
                 if random_number < adjusted_probability:
-                    flash_score('OUT', flash_label)
+                    flash_score('-OUT!-', flash_label)
                     wickets += 1
                     run_rate_pc = (runs_pc / balls_bowled) * 6
                     current_batsman = get_next_batsman_computer()[0]
@@ -608,11 +645,11 @@ def start_game(bat_or_bowl, selected_players, overs, username):
                     runs_pc += hit
                     run_rate_pc = (runs_pc / balls_bowled) * 6
                     if hit == 0:
-                        flash_score('dot ball', flash_label)
+                        flash_score('-dot ball-', flash_label)
                     else:
-                        flash_score(hit, flash_label)
+                        flash_score(f'-{hit}-', flash_label)
 
-                bat_type_label.config(text=f"Bowl countered with: {bat_type}")
+                bat_type_label.config(text=f"Shot Played: {bat_type}")
 
                 # Update all labels
                 update_bowling_labels()
@@ -630,12 +667,12 @@ def start_game(bat_or_bowl, selected_players, overs, username):
         # Drop-down to select ball type
         ball_type_var = tk.StringVar()
         ball_type_dropdown = Combobox(game, textvariable=ball_type_var, values=ball_types, state="readonly", font=('calibre', 20, 'bold'))
-        ball_type_dropdown.pack()
+        ball_type_dropdown.grid(row=3, column=1)
         bowling_widgets.append(ball_type_dropdown)
 
         # Button to simulate bowling a ball
         bowl_button = tk.Button(game, text="Bowl", command=bowl_ball, font=('calibre', 20, 'bold'))
-        bowl_button.pack()
+        bowl_button.grid(row=4, column=1)
         bowling_widgets.append(bowl_button)
 
     if bat_or_bowl == 'bat':
