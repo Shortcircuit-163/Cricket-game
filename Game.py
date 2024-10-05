@@ -308,7 +308,7 @@ def start_game(bat_or_bowl, selected_players, overs, username):
             return ball_type
         
         ball_type = get_ball_type()
-
+        button_images = [] # To prevent garbage collection of button images
 
         def update_batting_labels():
             # Update all live labels for batting
@@ -321,7 +321,7 @@ def start_game(bat_or_bowl, selected_players, overs, username):
 
         def submit_bat_choice(bat):
 
-            nonlocal player_batting_order, computer_batting_order, runs, balls_faced, run_rate, current_batsman, current_batsman_rating, current_bowler, innings_completed, ball_type, wickets, wickets_pc, runs, economy, economy_pc, Batting_Average, Batting_Overs, Bowling_Overs, Total_Overs
+            nonlocal button_images ,player_batting_order, computer_batting_order, runs, balls_faced, run_rate, current_batsman, current_batsman_rating, current_bowler, innings_completed, ball_type, wickets, wickets_pc, runs, economy, economy_pc, Batting_Average, Batting_Overs, Bowling_Overs, Total_Overs
 
 
             def bowl_now():
@@ -378,14 +378,9 @@ def start_game(bat_or_bowl, selected_players, overs, username):
             try:
                 flash_label.config(text="----")
             except tk.TclError:
-                pass                            # Suppress error if widget doesn't exist
+                pass  # Suppress error if widget doesn't exist
 
             try:
-                # Disable Bat button for 2 secs
-                bat_button.config(state=tk.DISABLED)
-
-                # After 2 seconds, enable Bat button and allow player to choose shot
-                game.after(2000, lambda: bat_button.config(state=tk.NORMAL))
             
                 # Scale the rating to influence the probability (90+ gives a higher probability of success)
                 rating_factor = 1 + ((float(current_batsman_rating) - 90.0)) / 10  # rating_factor > 1 if rating > 90
@@ -446,29 +441,60 @@ def start_game(bat_or_bowl, selected_players, overs, username):
                 update_batting_labels()
 
                 ball_type = get_ball_type()
+                
+                # Disable all Bat buttons for 2 seconds
+                for btn_name in [cut_btn, drive_btn, defend_btn, loft_btn, pull_btn]:
+                    btn_name.config(state=tk.DISABLED)
 
-                # Disable Bat button for 2 secs
-                bat_button.config(state=tk.DISABLED)
+                # After 2 seconds, re-enable all Bat buttons
+                game.after(2000, lambda: [btn_name.config(state=tk.NORMAL) for btn_name in [cut_btn, drive_btn, defend_btn, loft_btn, pull_btn]])
 
-                # After 2 seconds, enable Bat button and allow player to choose shot
-                game.after(2000, lambda: bat_button.config(state=tk.NORMAL))
 
             except tk.TclError:
                 pass
 
         # Bat type buttons
         bat_btns_frame = tk.Frame(game)
-        cut_shot_img = Image.open(r'images\game\bat_butons\cut.png')
-        cut_shot = ImageTk.PhotoImage(cut_shot_img)
-        cut_btn = Button(bat_btns_frame, image=cut_shot, style='A.TButton', command=submit_bat_choice('Cut'))
-        cut_btn.grid(row=0, column=1)
-        batting_widgets.append(ball_type_frame) #working here--------------------
+        bat_btns_frame.config(background='light grey')
 
-        # Button to submit the bat choice
-        bat_button = tk.Button(game, text="Bat", command=submit_bat_choice(bat), font=('calibre', 20, 'bold'))
-        bat_button.grid(row=4, column=1)
-        batting_widgets.append(bat_button)
-    
+        cut_shot_img = Image.open(r'images\game\bat_buttons\cut.png')
+        cut_shot = ImageTk.PhotoImage(cut_shot_img)
+        cut_btn = tk.Button(bat_btns_frame, image=cut_shot, background='light grey', command=lambda: submit_bat_choice('cut'), borderwidth=0)
+        cut_btn.grid(row=0, column=1)
+        batting_widgets.append(ball_type_frame)
+        button_images.append(cut_shot)
+
+        drive_shot_img = Image.open(r'images\game\bat_buttons\drive.png')
+        drive_shot = ImageTk.PhotoImage(drive_shot_img)
+        drive_btn = tk.Button(bat_btns_frame, image=drive_shot, background='light grey', command=lambda: submit_bat_choice('drive'), borderwidth=0)
+        drive_btn.grid(row=0, column=2)
+        batting_widgets.append(ball_type_frame)
+        button_images.append(drive_shot)
+
+        defend_shot_img = Image.open(r'images\game\bat_buttons\defend.png')
+        defend_shot = ImageTk.PhotoImage(defend_shot_img)
+        defend_btn = tk.Button(bat_btns_frame, image=defend_shot, background='light grey', command=lambda: submit_bat_choice('defend'), borderwidth=0)
+        defend_btn.grid(row=0, column=3)
+        batting_widgets.append(ball_type_frame)
+        button_images.append(defend_shot)
+
+        loft_shot_img = Image.open(r'images\game\bat_buttons\loft.png')
+        loft_shot = ImageTk.PhotoImage(loft_shot_img)
+        loft_btn = tk.Button(bat_btns_frame, image=loft_shot, background='light grey', command=lambda: submit_bat_choice('loft'), borderwidth=0)
+        loft_btn.grid(row=1, column=1)
+        batting_widgets.append(ball_type_frame)
+        button_images.append(loft_shot)
+
+        pull_shot_img = Image.open(r'images\game\bat_buttons\pull.png')
+        pull_shot = ImageTk.PhotoImage(pull_shot_img)
+        pull_btn = tk.Button(bat_btns_frame, image=pull_shot, background='light grey', command=lambda: submit_bat_choice('pull'), borderwidth=0)
+        pull_btn.grid(row=1, column=2)
+        batting_widgets.append(ball_type_frame)
+        button_images.append(pull_shot)
+
+        bat_btns_frame.grid(row=3, column=1, padx=20, pady=40, columnspan=3, sticky='nsew')
+        batting_widgets.append(bat_btns_frame)
+
 
     def bowling():
         balls_bowled = 0
