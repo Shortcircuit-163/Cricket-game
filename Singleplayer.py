@@ -13,12 +13,27 @@ def open_singleplayer():
     
     sp = tk.Tk()
     sp.title("Quicket-Singleplayer")
-    sp.geometry('600x900')
     sp.resizable(False, False)
     sp.configure(background='light grey')
     p1 = tk.PhotoImage(file=r'images\home\quicket.png')
     sp.iconphoto(True, p1)
     
+    def center_window(window, width, height):
+        # Get screen width and height
+        screen_width = window.winfo_screenwidth()
+        screen_height = window.winfo_screenheight()
+        
+        # Calculate x and y coordinates to center the window
+        x = (screen_width // 2) - (width // 2)
+        y = (screen_height // 2) - (height // 2)
+        
+        # Set window size and position
+        window.geometry(f"{width}x{height}+{x}+{y}")
+    
+    # Set window size and center it
+    window_width = 600
+    window_height = 900
+    center_window(sp, window_width, window_height)
     
     sp.grid_columnconfigure(0, weight=1)
     sp.grid_columnconfigure(1, weight=1)

@@ -20,6 +20,23 @@ def squad_scr(name, username):
             ph1 = tk.PhotoImage(file=r'images\home\quicket.png')
             self.sqd.iconphoto(True, ph1)
 
+            def center_window(window, width, height):
+                # Get screen width and height
+                screen_width = window.winfo_screenwidth()
+                screen_height = window.winfo_screenheight()
+                
+                # Calculate x and y coordinates to center the window
+                x = (screen_width // 2) - (width // 2)
+                y = (screen_height // 2) - (height // 2)
+                
+                # Set window size and position
+                window.geometry(f"{width}x{height}+{x}+{y}")
+
+            # Set window size and center it
+            window_width = 600
+            window_height = 800
+            center_window(self.sqd, window_width, window_height)
+
             style = ttk.Style()
             style.configure('TNotebook.Tab', padding=[20, 10])
 
@@ -104,7 +121,7 @@ def squad_scr(name, username):
                 scr_frame = tk.Frame(canvas, background='light grey')
                 canvas.create_window((0, 0), window=scr_frame, anchor="nw")
 
-                photo4 = tk.PhotoImage(file=r'images\singleplayer_start\home1.png')                
+                photo4 = tk.PhotoImage(file=r'images\shop\back.png')                
                 btn3 = tk.Button(scr_frame, image=photo4, command=go_to_singleplayer, borderwidth=0, background='light grey')
                 btn3.photo = photo4  # Keep a reference to avoid garbage collection
                 btn3.grid(row=0, column=0, sticky=W, padx=10, pady=10)

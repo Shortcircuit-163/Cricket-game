@@ -8,7 +8,7 @@ import csv
 
 game = tk.Tk()
 game.title(f"Quicket - Cricket Scorecard")
-game.geometry('1100x620')
+game.geometry('1100x670')
 game.resizable(False, False)
 p1 = tk.PhotoImage(file=r'images\home\quicket.png')
 game.iconphoto(True, p1)
@@ -38,11 +38,12 @@ def show_final_scores(player_batting_order, computer_batting_order):
         lst = [
             ('STATS', 'PLAYER', 'COMPUTER'),
             ('WINNER:', win_player, win_pc),
+            ('Earnings:', earnings, 'ꝏ'),
             ('Runs:', runs, runs_pc),
-            ('Run Rate:', run_rate, run_rate_pc),
+            ('Run Rate:', round(run_rate, 2), round(run_rate_pc, 2)),
             ('Wickets:', wickets, wickets_pc),
-            ('Economy:', economy, economy_pc),
-            ('Batting Average:', Batting_Average, Batting_Average_pc),
+            ('Economy:', round(economy, 2), round(economy_pc, 2)),
+            ('Batting Average:', round(Batting_Average, 2), round(Batting_Average_pc, 2)),
             ('Batting Overs:', Batting_Overs, Batting_Overs),
             ('Bowling Overs:', Bowling_Overs, Bowling_Overs),
             ('Total Overs:', Total_Overs, Total_Overs)
@@ -51,7 +52,7 @@ def show_final_scores(player_batting_order, computer_batting_order):
         total_rows = len(lst)
         total_columns = len(lst[0])
 
-        colours = ['#AFEEEE', '#F5FFFA', '#FFF0F5', '#F0FFF0', '#FFE4E1', '#FFFACD', '#FAFAD2', '#F0F8FF']
+        colours = ['#F0FFF0', '#AFEEEE', '#F5FFFA', '#FFF0F5', '#F0FFF0', '#FFE4E1', '#FFFACD', '#FAFAD2', '#F0F8FF']
         #'Light_Coral' : '#F08080' taken for 1st row
 
         # Table class
@@ -65,8 +66,12 @@ def show_final_scores(player_batting_order, computer_batting_order):
                             self.e = tk.Label(root, width=20, height=3, foreground='white', background='dark grey',
                                               font=('Arial', 20, 'bold'), anchor='w', padx=10)
                         elif i == 1:  # For the row with the win/loss messages
-                            self.e = tk.Label(root, width=20, height=3, wraplength=300, background='#F08080',
+                            if player_win == True:
+                                self.e = tk.Label(root, width=20, height=3, wraplength=300, background='#6e9827',
                                               font=('Arial', 16, 'bold'), anchor='w', padx=10)
+                            else:
+                                self.e = tk.Label(root, width=20, height=3, wraplength=300, background='#F08080',
+                                                font=('Arial', 16, 'bold'), anchor='w', padx=10)
                         else:
                             self.e = tk.Label(root, width=20, height=2, background=colour, font=('Arial', 16), anchor='w', padx=10)
                         
@@ -74,7 +79,6 @@ def show_final_scores(player_batting_order, computer_batting_order):
                         self.e.config(text=lst[i][j])
                 
                     x += 1
-
         # Create the table in the 'game' window
         table = Table(game)
 
@@ -90,6 +94,8 @@ Batting_Overs, Bowling_Overs, Total_Overs = 50, 50, 50
 bat_or_bowl = 'bat'
 player_batting_order = ['Player1', 'Player2', 'Player3', 'Player4', 'Player5', 'Player6']
 computer_batting_order = ['Comp1', 'Comp2', 'Comp3', 'Comp4', 'Comp5']
+player_win = True
+earnings = 100
 
 # Show the final scores
 show_final_scores(player_batting_order, computer_batting_order)

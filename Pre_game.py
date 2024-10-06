@@ -8,11 +8,27 @@ import random
 def pre_game(username, name, overs):
     pre_game = tk.Tk()
     pre_game.title("Quicket-Singleplayer")
-    pre_game.geometry('350x220')
     pre_game.resizable(False, False)
     pre_game.configure(background='light grey')
     p1 = tk.PhotoImage(file=r'images\home\quicket.png')
     pre_game.iconphoto(True, p1)
+
+    def center_window(window, width, height):
+        # Get screen width and height
+        screen_width = window.winfo_screenwidth()
+        screen_height = window.winfo_screenheight()
+        
+        # Calculate x and y coordinates to center the window
+        x = (screen_width // 2) - (width // 2)
+        y = (screen_height // 2) - (height // 2)
+        
+        # Set window size and position
+        window.geometry(f"{width}x{height}+{x}+{y}")
+
+    # Set window size and center it
+    window_width = 350
+    window_height = 220
+    center_window(pre_game, window_width, window_height)
 
     def toss_handle(toss_status):
         options_list = ['bat', 'bowl']
@@ -55,7 +71,25 @@ def pre_game(username, name, overs):
         
     
     def players_select():
-        pre_game.geometry('1200x600')
+
+        def center_window(window, width, height):
+            # Get screen width and height
+            screen_width = window.winfo_screenwidth()
+            screen_height = window.winfo_screenheight()
+            
+            # Calculate x and y coordinates to center the window
+            x = (screen_width // 2) - (width // 2)
+            y = (screen_height // 2) - (height // 2)
+            
+            # Set window size and position
+            window.geometry(f"{width}x{height}+{x}+{y}")
+
+        # Set window size and center it
+        window_width = 1200
+        window_height = 600
+        center_window(pre_game, window_width, window_height)
+
+
         toss_frame.config(background='light blue')
         def submit_selection():
             player_composition = []
@@ -112,7 +146,7 @@ def pre_game(username, name, overs):
                     widget.destroy()
                 pre_game.destroy()
                 from Game import start_game
-                start_game(bat_or_bowl, selected_players, overs, username)
+                start_game(bat_or_bowl, selected_players, overs, username, name)
 
         batsmen = []
         bowlers = []
@@ -266,4 +300,4 @@ def pre_game(username, name, overs):
 
     pre_game.mainloop()
 
-pre_game('user_1', 'Rishi', 2) # For testing purposes
+# pre_game('user_1', 'Rishi', 2) # For testing purposes

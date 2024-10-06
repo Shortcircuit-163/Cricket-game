@@ -14,11 +14,27 @@ def shop_scr(name, username):
         def __init__(self):
             self.shp = tk.Tk()
             self.shp.title("Shop")
-            self.shp.geometry('600x800')
             self.shp.resizable(False, False)
             self.shp.configure(background='light grey')
             ph1 = tk.PhotoImage(file=r'images\home\quicket.png')
             self.shp.iconphoto(True, ph1)
+
+            def center_window(window, width, height):
+                # Get screen width and height
+                screen_width = window.winfo_screenwidth()
+                screen_height = window.winfo_screenheight()
+                
+                # Calculate x and y coordinates to center the window
+                x = (screen_width // 2) - (width // 2)
+                y = (screen_height // 2) - (height // 2)
+                
+                # Set window size and position
+                window.geometry(f"{width}x{height}+{x}+{y}")
+
+            # Set window size and center it
+            window_width = 600
+            window_height = 800
+            center_window(self.shp, window_width, window_height)
 
             style = ttk.Style()
             style.configure('TNotebook.Tab', padding=[20, 10])
@@ -60,7 +76,7 @@ def shop_scr(name, username):
                             return f"{value / 1_000}K"
                         else:
                             return str(value)
-                    
+                
                 converted_player_price = convert_currency_num(player_price)
                     
                 # Read all data from the CSV file
@@ -75,13 +91,19 @@ def shop_scr(name, username):
                     for row in rows:
                         if row[1] == username:
                             current_balance = row[3]
-                            converted_current_balance = convert_currency_num(current_balance)
+                            if current_balance == 'inf':
+                                converted_current_balance = float('inf')
+                            else:
+                                converted_current_balance = convert_currency_num(current_balance)
 
                             if converted_current_balance >= converted_player_price:
                                 #changing the price
                                 converted_current_balance -= converted_player_price
-                                converted_current_balance_reset = convert_currency_back(converted_current_balance)
-                                row[3] = str(converted_current_balance_reset)
+                                if converted_current_balance == float('inf'):
+                                    row[3] = 'inf'
+                                else:
+                                    converted_current_balance_reset = convert_currency_back(converted_current_balance)
+                                    row[3] = str(converted_current_balance_reset)
 
                                 #adding the player name to owned players list
                                 if player_role == 'bat':
@@ -162,7 +184,7 @@ def shop_scr(name, username):
                 scr_frame = tk.Frame(canvas, background='light grey')
                 canvas.create_window((0, 0), window=scr_frame, anchor="nw")
 
-                photo4 = tk.PhotoImage(file=r'images\singleplayer_start\home1.png')                
+                photo4 = tk.PhotoImage(file=r'images\shop\back.png')                
                 btn3 = tk.Button(scr_frame, image=photo4, command=go_to_singleplayer, borderwidth=0, background='light grey')
                 btn3.photo = photo4  # Keep a reference to avoid garbage collection
                 btn3.grid(row=0, column=0, sticky=W, padx=10, pady=10)
@@ -183,6 +205,8 @@ def shop_scr(name, username):
                             for row in balance_reader:
                                 if row[1] == username:
                                     current_balance = row[3]
+                                    if current_balance == 'inf':
+                                        current_balance = '∞'
                                     balance.config(text=current_balance)
                                     break
                     except Exception as e:
@@ -195,7 +219,7 @@ def shop_scr(name, username):
                         return
 
                 # Call the update_balance function to start updating the balance label
-                win_exists = 1
+                # win_exists = 1
                 update_balance()
 
                 dir_list = os.listdir(path)

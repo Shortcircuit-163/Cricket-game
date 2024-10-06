@@ -14,6 +14,22 @@ def start_match_singleplayer(name, username):
     p1 = tk.PhotoImage(file=r'images\home\quicket.png')
     sm.iconphoto(True, p1)
     
+    def center_window(window, width, height):
+        # Get screen width and height
+        screen_width = window.winfo_screenwidth()
+        screen_height = window.winfo_screenheight()
+        
+        # Calculate x and y coordinates to center the window
+        x = (screen_width // 2) - (width // 2)
+        y = (screen_height // 2) - (height // 2)
+        
+        # Set window size and position
+        window.geometry(f"{width}x{height}+{x}+{y}")
+
+    # Set window size and center it
+    window_width = 1300
+    window_height = 700
+    center_window(sm, window_width, window_height)
 
     sm.grid_columnconfigure(0, weight=1)
     sm.grid_columnconfigure(1, weight=1)
@@ -82,6 +98,8 @@ def start_match_singleplayer(name, username):
 
     
     balance_return, batsmen_owned, bowlers_owned, wicket_keepers_owned, all_rounders_owned, wickets, runs, economy, innings, total_overs, games_won = return_playerdata()[0], return_playerdata()[1], return_playerdata()[2], return_playerdata()[3], return_playerdata()[4], return_playerdata()[5], return_playerdata()[6], return_playerdata()[7], return_playerdata()[8], return_playerdata()[9], return_playerdata()[10]
+    if balance_return == 'inf':
+        balance_return = '∞'
 
     bat = tk.Frame(player_info, highlightbackground="black", highlightthickness=6, background='light grey')
     bat.config(background="light grey")

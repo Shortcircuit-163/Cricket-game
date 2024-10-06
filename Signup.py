@@ -8,11 +8,27 @@ def signup_window():
 
     sgnp = tk.Tk()
     sgnp.title("Quicket-Signup")
-    sgnp.geometry('800x600')
     sgnp.resizable(False, False)
     sgnp.configure(background='light grey')
     ph1 = tk.PhotoImage(file=r'images\home\quicket.png')
     sgnp.iconphoto(True, ph1)
+
+    def center_window(window, width, height):
+        # Get screen width and height
+        screen_width = window.winfo_screenwidth()
+        screen_height = window.winfo_screenheight()
+        
+        # Calculate x and y coordinates to center the window
+        x = (screen_width // 2) - (width // 2)
+        y = (screen_height // 2) - (height // 2)
+        
+        # Set window size and position
+        window.geometry(f"{width}x{height}+{x}+{y}")
+
+    # Set window size and center it
+    window_width = 800
+    window_height = 600
+    center_window(sgnp, window_width, window_height)
 
     sgnp.grid_columnconfigure(0, weight=1)
     sgnp.grid_columnconfigure(2, weight=1)

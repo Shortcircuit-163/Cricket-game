@@ -5,7 +5,7 @@ from PIL import ImageTk, Image
 import random
 import csv
 
-def start_game(bat_or_bowl, selected_players, overs, username):
+def start_game(bat_or_bowl, selected_players, overs, username, name):
 
     overs = int(overs)
 
@@ -26,6 +26,22 @@ def start_game(bat_or_bowl, selected_players, overs, username):
     bg_label = tk.Label(game, image=background_image)
     bg_label.place(x=0, y=0, relwidth=1, relheight=1)  # Cover the entire window
     
+    def center_window(window, width, height):
+        # Get screen width and height
+        screen_width = window.winfo_screenwidth()
+        screen_height = window.winfo_screenheight()
+        
+        # Calculate x and y coordinates to center the window
+        x = (screen_width // 2) - (width // 2)
+        y = (screen_height // 2) - (height // 2)
+        
+        # Set window size and position
+        window.geometry(f"{width}x{height}+{x}+{y}")
+
+    # Set window size and center it
+    window_width = 1400
+    window_height = 620
+    center_window(game, window_width, window_height)
     
     game.columnconfigure(0, minsize=450)
     game.columnconfigure(1, minsize=500)
@@ -163,17 +179,17 @@ def start_game(bat_or_bowl, selected_players, overs, username):
     batting_widgets = []
     bowling_widgets = []
     earnings = 0
+    player_win = False
 
     def save_data(runs_pc, wickets, runs, economy, innings_completed, Batting_Average, Batting_Overs, Bowling_Overs, Total_Overs):
-            nonlocal earnings
+            nonlocal earnings, player_win
 
             rows = []
             with open(r'all_data\user_data.csv', 'r', newline='') as file:
                 reader = csv.reader(file)
                 for row in reader:
                     rows.append(row)
-                
-                player_win = False
+
                 if runs >= runs_pc:
                     player_win = True
 
@@ -184,7 +200,7 @@ def start_game(bat_or_bowl, selected_players, overs, username):
 
                 for i in rows:
                     if i[1] == username:
-                        i[3] = int(i[3]) + earnings
+                        i[3] = float(i[3]) + earnings
                         i[8] = int(i[8]) + wickets
                         i[9] = int(i[9]) + runs
                         i[10] = round((float(i[10]) + float(economy)) / (float(i[14]) + float(Bowling_Overs)), 2)
@@ -203,9 +219,62 @@ def start_game(bat_or_bowl, selected_players, overs, username):
     def show_final_scores(player_batting_order, computer_batting_order):
         nonlocal earnings, runs, runs_pc, run_rate, run_rate_pc, wickets, wickets_pc, economy, economy_pc, Batting_Average, Batting_Average_pc, Batting_Overs, Bowling_Overs, Total_Overs, bat_or_bowl
 
-        win_player = ''
-        win_pc = ''
+        nonlocal player_win
+        def center_window(window, width, height):
+            # Get screen width and height
+            screen_width = window.winfo_screenwidth()
+            screen_height = window.winfo_screenheight()
+            
+            # Calculate x and y coordinates to center the window
+            x = (screen_width // 2) - (width // 2)
+            y = (screen_height // 2) - (height // 2)
+            
+            # Set window size and position
+            window.geometry(f"{width}x{height}+{x}+{y}")
+
+        # Set window size and center it
+        window_width = 1400
+        window_height = 670
+        center_window(game, window_width, window_height)
         game.attributes('-alpha', 0.95)
+
+        def restart_game():
+            # Logic to reset game state or return to main menu
+            msg = 'Choose to continue playing or quit the game.'
+            top = tk.Toplevel(game)
+            top.title("Toss result")
+            top.geometry("350x150")
+
+            message = tk.Label(top, text=msg)
+            message.pack(pady=20)
+
+            response = tk.StringVar(value="")
+
+            def on_yes():
+                response.set("yes")
+                top.destroy()
+
+            def on_no():
+                response.set("no")
+                top.destroy()
+
+            button1 = tk.Button(top, text="Exit", command=on_yes, background='light grey')
+            button1.pack(side=tk.LEFT, padx=20)
+
+            button2 = tk.Button(top, text="Continue", command=on_no, background='light grey')
+            button2.pack(side=tk.RIGHT, padx=20)
+
+            top.wait_window()  # Wait for the user to make a selection
+            if response.get() == "yes":
+                game.destroy() # Close the window if confirmed            
+            else:
+                game.destroy()  # Go back to main menu if cancelled
+                print("Restarting...")
+                from Singleplayer_start import start_match_singleplayer as start
+                start(name, username)
+              
+        
+        game.protocol("WM_DELETE_WINDOW", restart_game)
 
         # Determine the winner
         if runs >= runs_pc:
@@ -256,7 +325,7 @@ def start_game(bat_or_bowl, selected_players, overs, username):
                             self.e = tk.Label(root, width=20, height=3, foreground='white', background='dark grey',
                                               font=('Arial', 20, 'bold'), anchor='w', padx=10)
                         elif i == 1:  # For the row with the win/loss messages
-                            if win_player == True:
+                            if player_win == True:
                                 self.e = tk.Label(root, width=20, height=3, wraplength=300, background='#6e9827',
                                               font=('Arial', 16, 'bold'), anchor='w', padx=10)
                             else:
@@ -493,35 +562,35 @@ def start_game(bat_or_bowl, selected_players, overs, username):
 
         cut_shot_img = Image.open(r'images\game\bat_buttons\cut.png')
         cut_shot = ImageTk.PhotoImage(cut_shot_img)
-        cut_btn = tk.Button(bat_btns_frame, image=cut_shot, background='#D4EFE9', command=lambda: submit_bat_choice('cut'), borderwidth=0, activebackground='light grey')
+        cut_btn = tk.Button(bat_btns_frame, image=cut_shot, background='#D4EFE9', command=lambda: submit_bat_choice('cut'), borderwidth=0, activebackground='#D4EFE9', )
         cut_btn.grid(row=0, column=0, sticky='nsew', pady=20)
         batting_widgets.append(ball_type_frame)
         button_images_bat.append(cut_shot)
 
         drive_shot_img = Image.open(r'images\game\bat_buttons\drive.png')
         drive_shot = ImageTk.PhotoImage(drive_shot_img)
-        drive_btn = tk.Button(bat_btns_frame, image=drive_shot, background='#D4EFE9', command=lambda: submit_bat_choice('drive'), borderwidth=0, activebackground='light grey')
+        drive_btn = tk.Button(bat_btns_frame, image=drive_shot, background='#D4EFE9', command=lambda: submit_bat_choice('drive'), borderwidth=0, activebackground='#D4EFE9')
         drive_btn.grid(row=0, column=2, sticky='nsew', pady=20)
         batting_widgets.append(ball_type_frame)
         button_images_bat.append(drive_shot)
 
         defend_shot_img = Image.open(r'images\game\bat_buttons\defend.png')
         defend_shot = ImageTk.PhotoImage(defend_shot_img)
-        defend_btn = tk.Button(bat_btns_frame, image=defend_shot, background='#D4EFE9', command=lambda: submit_bat_choice('defend'), borderwidth=0, activebackground='light grey')
+        defend_btn = tk.Button(bat_btns_frame, image=defend_shot, background='#D4EFE9', command=lambda: submit_bat_choice('defend'), borderwidth=0, activebackground='#D4EFE9')
         defend_btn.grid(row=1, column=1, sticky='nsew')
         batting_widgets.append(ball_type_frame)
         button_images_bat.append(defend_shot)
 
         loft_shot_img = Image.open(r'images\game\bat_buttons\loft.png')
         loft_shot = ImageTk.PhotoImage(loft_shot_img)
-        loft_btn = tk.Button(bat_btns_frame, image=loft_shot, background='#D4EFE9', command=lambda: submit_bat_choice('loft'), borderwidth=0, activebackground='light grey')
+        loft_btn = tk.Button(bat_btns_frame, image=loft_shot, background='#D4EFE9', command=lambda: submit_bat_choice('loft'), borderwidth=0, activebackground='#D4EFE9')
         loft_btn.grid(row=1, column=0, sticky='nsew')
         batting_widgets.append(ball_type_frame)
         button_images_bat.append(loft_shot)
 
         pull_shot_img = Image.open(r'images\game\bat_buttons\pull.png')
         pull_shot = ImageTk.PhotoImage(pull_shot_img)
-        pull_btn = tk.Button(bat_btns_frame, image=pull_shot, background='#D4EFE9', command=lambda: submit_bat_choice('pull'), borderwidth=0, activebackground='light grey')
+        pull_btn = tk.Button(bat_btns_frame, image=pull_shot, background='#D4EFE9', command=lambda: submit_bat_choice('pull'), borderwidth=0, activebackground='#D4EFE9')
         pull_btn.grid(row=1, column=2, sticky='nsew')
         batting_widgets.append(ball_type_frame)
         button_images_bat.append(pull_shot)
@@ -740,35 +809,35 @@ def start_game(bat_or_bowl, selected_players, overs, username):
 
         fast_ball_img = Image.open(r'images\game\ball_buttons\fast.png')
         fast_ball = ImageTk.PhotoImage(fast_ball_img)
-        fast_btn = tk.Button(ball_btns_frame, image=fast_ball, background='#FFB19D', command=lambda: bowl_ball('fast'), borderwidth=0, activebackground='light grey')
+        fast_btn = tk.Button(ball_btns_frame, image=fast_ball, background='#FFB19D', command=lambda: bowl_ball('fast'), borderwidth=0, activebackground='#FFB19D')
         fast_btn.grid(row=0, column=0, sticky='nsew', pady=20, padx=5)
         bowling_widgets.append(ball_btns_frame)
         button_images_ball.append(fast_ball)
 
         spin_ball_img = Image.open(r'images\game\ball_buttons\spin.png')
         spin_ball = ImageTk.PhotoImage(spin_ball_img)
-        spin_btn = tk.Button(ball_btns_frame, image=spin_ball, background='#FFB19D', command=lambda: bowl_ball('spin'), borderwidth=0, activebackground='light grey')
+        spin_btn = tk.Button(ball_btns_frame, image=spin_ball, background='#FFB19D', command=lambda: bowl_ball('spin'), borderwidth=0, activebackground='#FFB19D')
         spin_btn.grid(row=0, column=2, sticky='nsew', pady=20, padx=5)
         bowling_widgets.append(ball_btns_frame)
         button_images_ball.append(spin_ball)
 
         swing_ball_img = Image.open(r'images\game\ball_buttons\swing.png')
         swing_ball = ImageTk.PhotoImage(swing_ball_img)
-        swing_btn = tk.Button(ball_btns_frame, image=swing_ball, background='#FFB19D', command=lambda: bowl_ball('swing'), borderwidth=0, activebackground='light grey')
+        swing_btn = tk.Button(ball_btns_frame, image=swing_ball, background='#FFB19D', command=lambda: bowl_ball('swing'), borderwidth=0, activebackground='#FFB19D')
         swing_btn.grid(row=1, column=1, sticky='nsew', padx=5)
         bowling_widgets.append(ball_btns_frame)
         button_images_ball.append(swing_ball)
 
         bouncer_ball_img = Image.open(r'images\game\ball_buttons\bouncer.png')
         bouncer_ball = ImageTk.PhotoImage(bouncer_ball_img)
-        bouncer_btn = tk.Button(ball_btns_frame, image=bouncer_ball, background='#FFB19D', command=lambda: bowl_ball('bouncer'), borderwidth=0, activebackground='light grey')
+        bouncer_btn = tk.Button(ball_btns_frame, image=bouncer_ball, background='#FFB19D', command=lambda: bowl_ball('bouncer'), borderwidth=0, activebackground='#FFB19D')
         bouncer_btn.grid(row=1, column=0, sticky='nsew', padx=5)
         bowling_widgets.append(ball_btns_frame)
         button_images_ball.append(bouncer_ball)
 
         yorker_ball_img = Image.open(r'images\game\ball_buttons\yorker.png')
         yorker_ball = ImageTk.PhotoImage(yorker_ball_img)
-        yorker_btn = tk.Button(ball_btns_frame, image=yorker_ball, background='#FFB19D', command=lambda: bowl_ball('yorker'), borderwidth=0, activebackground='light grey')
+        yorker_btn = tk.Button(ball_btns_frame, image=yorker_ball, background='#FFB19D', command=lambda: bowl_ball('yorker'), borderwidth=0, activebackground='#FFB19D')
         yorker_btn.grid(row=1, column=2, sticky='nsew', padx=5)
         bowling_widgets.append(ball_btns_frame)
         button_images_ball.append(yorker_ball)

@@ -6,7 +6,6 @@ from tkinter import messagebox
 
 def home():
 
-
     def exit_and_open_singleplayer():
         win.destroy()
         from Singleplayer import open_singleplayer
@@ -14,11 +13,26 @@ def home():
 
     win = tk.Tk()
     win.title("Quicket")
-    win.geometry('470x750')
     win.resizable(False, False)
     win.configure(background='light grey')
     p1 = tk.PhotoImage(file=r'images\home\quicket.png')
     win.iconphoto(True, p1)
+
+    def center_window(window, width, height):
+        # Get screen width and height
+        screen_width = window.winfo_screenwidth()
+        screen_height = window.winfo_screenheight()
+        
+        # Calculate x and y coordinates to center the window
+        x = (screen_width // 2) - (width // 2)
+        y = (screen_height // 2) - (height // 2)
+        
+        # Set window size and position
+        window.geometry(f"{width}x{height}+{x}+{y}")
+    
+    window_width = 470
+    window_height = 750
+    center_window(win, window_width, window_height)
 
     win.grid_columnconfigure(0, weight=1)
     win.grid_columnconfigure(1, weight=1)
