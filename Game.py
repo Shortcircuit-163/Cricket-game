@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import Entry, END
+from tkinter import END
 from tkinter.ttk import *
 from PIL import ImageTk, Image
 import random
@@ -11,14 +11,28 @@ def start_game(bat_or_bowl, selected_players, overs, username):
 
     game = tk.Tk()
     game.title(f"Quicket-Singleplayer_{overs}-overs_{bat_or_bowl}")
-    game.geometry('1150x600')
+    game.geometry('1400x620')
     game.resizable(False, False)
+
     game.configure(background='light grey')
+
     p1 = tk.PhotoImage(file=r'images\home\quicket.png')
     game.iconphoto(True, p1)
-    game.columnconfigure(0, minsize=400)
-    game.columnconfigure(1, minsize=400)
-    game.columnconfigure(2, minsize=400)
+
+    bg_image = Image.open(r'images\game\bgg.png')
+    backg_image = bg_image.resize((1400, 620), Image.Resampling.LANCZOS)
+    background_image = ImageTk.PhotoImage(backg_image)
+    # Create a label to display the image
+    bg_label = tk.Label(game, image=background_image)
+    bg_label.place(x=0, y=0, relwidth=1, relheight=1)  # Cover the entire window
+    
+    
+    game.columnconfigure(0, minsize=450)
+    game.columnconfigure(1, minsize=500)
+    game.columnconfigure(2, minsize=450)
+    game.grid_columnconfigure(0, weight=1)
+    game.grid_columnconfigure(1, weight=1)
+    game.grid_columnconfigure(2, weight=1)
 
     # setting batting and bowling order for computer
     computer_batsmen_unpicked = []
@@ -147,8 +161,12 @@ def start_game(bat_or_bowl, selected_players, overs, username):
     Bowling_Overs = 0.0
     Total_Overs = 0.0
     batting_widgets = []
+    bowling_widgets = []
+    earnings = 0
 
-    def save_data(wickets, runs, economy, innings_completed, Batting_Average, Batting_Overs, Bowling_Overs, Total_Overs):
+    def save_data(runs_pc, wickets, runs, economy, innings_completed, Batting_Average, Batting_Overs, Bowling_Overs, Total_Overs):
+            nonlocal earnings
+
             rows = []
             with open(r'all_data\user_data.csv', 'r', newline='') as file:
                 reader = csv.reader(file)
@@ -159,16 +177,22 @@ def start_game(bat_or_bowl, selected_players, overs, username):
                 if runs >= runs_pc:
                     player_win = True
 
+                if player_win == True:
+                    earnings = (runs - runs_pc) * 10000
+                else:
+                    earnings = (runs_pc - runs) * 1000
+
                 for i in rows:
                     if i[1] == username:
+                        i[3] = int(i[3]) + earnings
                         i[8] = int(i[8]) + wickets
                         i[9] = int(i[9]) + runs
-                        i[10] = (float(i[10]) + float(economy)) / (float(i[14]) + float(Bowling_Overs))
+                        i[10] = round((float(i[10]) + float(economy)) / (float(i[14]) + float(Bowling_Overs)), 2)
                         i[11] = int(i[11]) + innings_completed
-                        i[12] = (float(i[12]) + float(Batting_Average)) / (float(i[13]) + float(Batting_Overs))
-                        i[13] = float((i[13])) + float(Batting_Overs)
-                        i[14] = float((i[14])) + float(Bowling_Overs)
-                        i[15] = float(((i[15]))) + float(Total_Overs)
+                        i[12] = round((float(i[12]) + float(Batting_Average)) / (float(i[13]) + float(Batting_Overs)), 2)
+                        i[13] = round(float((i[13])) + float(Batting_Overs), 2)
+                        i[14] = round(float((i[14])) + float(Bowling_Overs), 2)
+                        i[15] = round(float(((i[15]))) + float(Total_Overs), 2)
                         i[16] = int(i[16]) + 1 if player_win else int(i[16])
                         break
 
@@ -177,10 +201,11 @@ def start_game(bat_or_bowl, selected_players, overs, username):
                 writer.writerows(rows)
     
     def show_final_scores(player_batting_order, computer_batting_order):
-        nonlocal runs, runs_pc, run_rate, run_rate_pc, wickets, wickets_pc, economy, economy_pc, Batting_Average, Batting_Average_pc, Batting_Overs, Bowling_Overs, Total_Overs, bat_or_bowl
+        nonlocal earnings, runs, runs_pc, run_rate, run_rate_pc, wickets, wickets_pc, economy, economy_pc, Batting_Average, Batting_Average_pc, Batting_Overs, Bowling_Overs, Total_Overs, bat_or_bowl
 
         win_player = ''
         win_pc = ''
+        game.attributes('-alpha', 0.95)
 
         # Determine the winner
         if runs >= runs_pc:
@@ -190,6 +215,7 @@ def start_game(bat_or_bowl, selected_players, overs, username):
             else:
                 win_player = f'You have won by {runs - runs_pc} runs!'
                 win_pc = f'Lost. Fell short of {runs - runs_pc} runs!'
+
         else:
             if bat_or_bowl == 'bowl':
                 win_player = f'Lost. You fell short of {runs_pc - runs} runs!'
@@ -202,11 +228,12 @@ def start_game(bat_or_bowl, selected_players, overs, username):
         lst = [
             ('STATS', 'PLAYER', 'COMPUTER'),
             ('WINNER:', win_player, win_pc),
+            ('Earnings:', earnings, 'ꝏ'),
             ('Runs:', runs, runs_pc),
-            ('Run Rate:', run_rate, run_rate_pc),
+            ('Run Rate:', round(run_rate, 2), round(run_rate_pc, 2)),
             ('Wickets:', wickets, wickets_pc),
-            ('Economy:', economy, economy_pc),
-            ('Batting Average:', Batting_Average, Batting_Average_pc),
+            ('Economy:', round(economy, 2), round(economy_pc, 2)),
+            ('Batting Average:', round(Batting_Average, 2), round(Batting_Average_pc, 2)),
             ('Batting Overs:', Batting_Overs, Batting_Overs),
             ('Bowling Overs:', Bowling_Overs, Bowling_Overs),
             ('Total Overs:', Total_Overs, Total_Overs)
@@ -215,7 +242,7 @@ def start_game(bat_or_bowl, selected_players, overs, username):
         total_rows = len(lst)
         total_columns = len(lst[0])
 
-        colours = ['#AFEEEE', '#F5FFFA', '#FFF0F5', '#F0FFF0', '#FFE4E1', '#FFFACD', '#FAFAD2', '#F0F8FF']
+        colours = ['#F0FFF0', '#AFEEEE', '#F5FFFA', '#FFF0F5', '#F0FFF0', '#FFE4E1', '#FFFACD', '#FAFAD2', '#F0F8FF']
         #'Light_Coral' : '#F08080' taken for 1st row
 
         # Table class
@@ -229,8 +256,12 @@ def start_game(bat_or_bowl, selected_players, overs, username):
                             self.e = tk.Label(root, width=20, height=3, foreground='white', background='dark grey',
                                               font=('Arial', 20, 'bold'), anchor='w', padx=10)
                         elif i == 1:  # For the row with the win/loss messages
-                            self.e = tk.Label(root, width=20, height=2, wraplength=300, background='#F08080',
+                            if win_player == True:
+                                self.e = tk.Label(root, width=20, height=3, wraplength=300, background='#6e9827',
                                               font=('Arial', 16, 'bold'), anchor='w', padx=10)
+                            else:
+                                self.e = tk.Label(root, width=20, height=3, wraplength=300, background='#F08080',
+                                                font=('Arial', 16, 'bold'), anchor='w', padx=10)
                         else:
                             self.e = tk.Label(root, width=20, height=2, background=colour, font=('Arial', 16), anchor='w', padx=10)
                         
@@ -257,42 +288,42 @@ def start_game(bat_or_bowl, selected_players, overs, username):
         balls_faced_frame.config(background='#F0FFF0')
         balls_faced_label = tk.Label(balls_faced_frame, text=f"Balls Faced: {balls_faced}", font=('calibre', 20, 'bold'), background='#F0FFF0')
         balls_faced_label.pack()
-        balls_faced_frame.grid(row=1, column=2, padx=20, pady=40)
+        balls_faced_frame.grid(row=1, column=2, padx=20, pady=40, sticky='nsew')
         batting_widgets.append(balls_faced_frame)
 
         current_batsman_frame = tk.Frame(game, highlightbackground="black", highlightthickness=6, width=300, height=150)
         current_batsman_frame.config(background='#FFF0F5')
         current_batsman_label = tk.Label(current_batsman_frame, background='#FFF0F5', text=f"Current Batsman: {current_batsman}", font=('calibre', 20, 'bold'))
         current_batsman_label.pack()
-        current_batsman_frame.grid(row=0, column=0, padx=20, pady=40)
+        current_batsman_frame.grid(row=0, column=0, padx=20, pady=40, sticky='nsew')
         batting_widgets.append(current_batsman_frame)
 
         current_bowler_frame = tk.Frame(game, highlightbackground="black", highlightthickness=6, width=300, height=150)
         current_bowler_frame.config(background='#F0FFF0')
         current_bowler_label = tk.Label(current_bowler_frame, background='#F0FFF0', text=f"Current Bowler: {current_bowler}", font=('calibre', 20, 'bold'))
         current_bowler_label.pack()
-        current_bowler_frame.grid(row=1, column=0, padx=20, pady=40)
+        current_bowler_frame.grid(row=1, column=0, padx=20, pady=40, sticky='nsew')
         batting_widgets.append(current_bowler_frame)
 
         runs_label_frame = tk.Frame(game, highlightbackground="black", highlightthickness=6, width=300, height=150)
         runs_label_frame.config(background='#AFEEEE')
         runs_label = tk.Label(runs_label_frame, text=f"Runs: {runs}", font=('calibre', 20, 'bold'), background='#AFEEEE')
         runs_label.pack()
-        runs_label_frame.grid(row=0, column=1, padx=20, pady=40)
+        runs_label_frame.grid(row=0, column=1, padx=20, pady=40, sticky='nsew')
         batting_widgets.append(runs_label_frame)
 
         run_rate_label_frame = tk.Frame(game, highlightbackground="black", highlightthickness=6, width=300, height=150)
         run_rate_label_frame.config(background='#FFE4E1')
         run_rate_label = tk.Label(run_rate_label_frame, text=f"Run Rate: {run_rate:.2f}", font=('calibre', 20, 'bold'), background='#FFE4E1')
         run_rate_label.pack()
-        run_rate_label_frame.grid(row=0, column=2, padx=20, pady=40)
+        run_rate_label_frame.grid(row=0, column=2, padx=20, pady=40, sticky='nsew')
         batting_widgets.append(run_rate_label_frame)
 
         ball_type_frame = tk.Frame(game, highlightbackground="black", highlightthickness=6, width=300, height=150)
         ball_type_frame.config(background='#FAFAD2')
         ball_type_label = tk.Label(ball_type_frame, text="Ball Type:", font=('calibre', 20, 'bold'), background='#FAFAD2')
         ball_type_label.pack()
-        ball_type_frame.grid(row=1, column=1, padx=20, pady=40)
+        ball_type_frame.grid(row=1, column=1, padx=20, pady=40, sticky='nsew')
         batting_widgets.append(ball_type_frame)
 
         flash_label_frame = tk.Frame(game, highlightbackground="red", highlightthickness=6, width=300, height=150)
@@ -308,7 +339,7 @@ def start_game(bat_or_bowl, selected_players, overs, username):
             return ball_type
         
         ball_type = get_ball_type()
-        button_images = [] # To prevent garbage collection of button images
+        button_images_bat = [] # To prevent garbage collection of button images
 
         def update_batting_labels():
             # Update all live labels for batting
@@ -321,7 +352,7 @@ def start_game(bat_or_bowl, selected_players, overs, username):
 
         def submit_bat_choice(bat):
 
-            nonlocal button_images ,player_batting_order, computer_batting_order, runs, balls_faced, run_rate, current_batsman, current_batsman_rating, current_bowler, innings_completed, ball_type, wickets, wickets_pc, runs, economy, economy_pc, Batting_Average, Batting_Overs, Bowling_Overs, Total_Overs
+            nonlocal button_images_bat ,player_batting_order, computer_batting_order, runs, balls_faced, run_rate, current_batsman, current_batsman_rating, current_bowler, innings_completed, ball_type, wickets, wickets_pc, runs, economy, economy_pc, Batting_Average, Batting_Overs, Bowling_Overs, Total_Overs
 
 
             def bowl_now():
@@ -333,6 +364,9 @@ def start_game(bat_or_bowl, selected_players, overs, username):
                 clear_widgets(batting_widgets)
                 bowling()
 
+            # Reset flash label immediately
+            flash_label.config(text="----")
+
 
             if balls_faced % 6 == 0:
                 if balls_faced == (overs * 6) / 2:
@@ -343,7 +377,7 @@ def start_game(bat_or_bowl, selected_players, overs, username):
                         Batting_Average = float(runs / Batting_Overs)
                         economy_pc = float(runs / Batting_Overs)
                         Total_Overs = float(overs)
-                        save_data(wickets, runs, economy, innings_completed, Batting_Average, Batting_Overs, Bowling_Overs, Total_Overs)
+                        save_data(runs_pc, wickets, runs, economy, innings_completed, Batting_Average, Batting_Overs, Bowling_Overs, Total_Overs)
                         clear_widgets(batting_widgets)
                         tk.messagebox.showinfo("Game Over", "The game has ended. Thanks for playing!")
                         show_final_scores(player_batting_order, computer_batting_order)
@@ -363,7 +397,7 @@ def start_game(bat_or_bowl, selected_players, overs, username):
                             Batting_Average = float(runs / Batting_Overs)
                             economy_pc = float(runs / Batting_Overs)
                             Total_Overs = float(overs)
-                            save_data(wickets, runs, economy, innings_completed, Batting_Average, Batting_Overs, Bowling_Overs, Total_Overs)
+                            save_data(runs_pc, wickets, runs, economy, innings_completed, Batting_Average, Batting_Overs, Bowling_Overs, Total_Overs)
                             clear_widgets(batting_widgets)
                             tk.messagebox.showinfo("Game Over", "The game has ended. Thanks for playing!")
                             show_final_scores(player_batting_order, computer_batting_order)
@@ -374,10 +408,10 @@ def start_game(bat_or_bowl, selected_players, overs, username):
                     
                     current_bowler = get_next_bowler_computer()[0]
 
-            # Reset flash label immediately
-            try:
-                flash_label.config(text="----")
-            except tk.TclError:
+            # # Reset flash label immediately
+            # try:
+            #     flash_label.config(text="----")
+            # except tk.TclError:
                 pass  # Suppress error if widget doesn't exist
 
             try:
@@ -427,7 +461,7 @@ def start_game(bat_or_bowl, selected_players, overs, username):
                             Batting_Average = float(runs / Batting_Overs)
                             Total_Overs = float(overs)
                             economy_pc = float(runs / Batting_Overs)
-                            save_data(wickets, runs, economy, innings_completed, Batting_Average, Batting_Overs, Bowling_Overs, Total_Overs)
+                            save_data(runs_pc, wickets, runs, economy, innings_completed, Batting_Average, Batting_Overs, Bowling_Overs, Total_Overs)
                             clear_widgets(batting_widgets)
                             tk.messagebox.showinfo("Game Over", "The game has ended. Thanks for playing!")
                             show_final_scores(player_batting_order, computer_batting_order)
@@ -453,53 +487,59 @@ def start_game(bat_or_bowl, selected_players, overs, username):
             except tk.TclError:
                 pass
 
-        # Bat type buttons
+        # Bat buttons
         bat_btns_frame = tk.Frame(game)
-        bat_btns_frame.config(background='light grey')
+        bat_btns_frame.config(background='#D4EFE9', highlightbackground="black", highlightthickness=3)
 
         cut_shot_img = Image.open(r'images\game\bat_buttons\cut.png')
         cut_shot = ImageTk.PhotoImage(cut_shot_img)
-        cut_btn = tk.Button(bat_btns_frame, image=cut_shot, background='light grey', command=lambda: submit_bat_choice('cut'), borderwidth=0)
-        cut_btn.grid(row=0, column=1)
+        cut_btn = tk.Button(bat_btns_frame, image=cut_shot, background='#D4EFE9', command=lambda: submit_bat_choice('cut'), borderwidth=0, activebackground='light grey')
+        cut_btn.grid(row=0, column=0, sticky='nsew', pady=20)
         batting_widgets.append(ball_type_frame)
-        button_images.append(cut_shot)
+        button_images_bat.append(cut_shot)
 
         drive_shot_img = Image.open(r'images\game\bat_buttons\drive.png')
         drive_shot = ImageTk.PhotoImage(drive_shot_img)
-        drive_btn = tk.Button(bat_btns_frame, image=drive_shot, background='light grey', command=lambda: submit_bat_choice('drive'), borderwidth=0)
-        drive_btn.grid(row=0, column=2)
+        drive_btn = tk.Button(bat_btns_frame, image=drive_shot, background='#D4EFE9', command=lambda: submit_bat_choice('drive'), borderwidth=0, activebackground='light grey')
+        drive_btn.grid(row=0, column=2, sticky='nsew', pady=20)
         batting_widgets.append(ball_type_frame)
-        button_images.append(drive_shot)
+        button_images_bat.append(drive_shot)
 
         defend_shot_img = Image.open(r'images\game\bat_buttons\defend.png')
         defend_shot = ImageTk.PhotoImage(defend_shot_img)
-        defend_btn = tk.Button(bat_btns_frame, image=defend_shot, background='light grey', command=lambda: submit_bat_choice('defend'), borderwidth=0)
-        defend_btn.grid(row=0, column=3)
+        defend_btn = tk.Button(bat_btns_frame, image=defend_shot, background='#D4EFE9', command=lambda: submit_bat_choice('defend'), borderwidth=0, activebackground='light grey')
+        defend_btn.grid(row=1, column=1, sticky='nsew')
         batting_widgets.append(ball_type_frame)
-        button_images.append(defend_shot)
+        button_images_bat.append(defend_shot)
 
         loft_shot_img = Image.open(r'images\game\bat_buttons\loft.png')
         loft_shot = ImageTk.PhotoImage(loft_shot_img)
-        loft_btn = tk.Button(bat_btns_frame, image=loft_shot, background='light grey', command=lambda: submit_bat_choice('loft'), borderwidth=0)
-        loft_btn.grid(row=1, column=1)
+        loft_btn = tk.Button(bat_btns_frame, image=loft_shot, background='#D4EFE9', command=lambda: submit_bat_choice('loft'), borderwidth=0, activebackground='light grey')
+        loft_btn.grid(row=1, column=0, sticky='nsew')
         batting_widgets.append(ball_type_frame)
-        button_images.append(loft_shot)
+        button_images_bat.append(loft_shot)
 
         pull_shot_img = Image.open(r'images\game\bat_buttons\pull.png')
         pull_shot = ImageTk.PhotoImage(pull_shot_img)
-        pull_btn = tk.Button(bat_btns_frame, image=pull_shot, background='light grey', command=lambda: submit_bat_choice('pull'), borderwidth=0)
-        pull_btn.grid(row=1, column=2)
+        pull_btn = tk.Button(bat_btns_frame, image=pull_shot, background='#D4EFE9', command=lambda: submit_bat_choice('pull'), borderwidth=0, activebackground='light grey')
+        pull_btn.grid(row=1, column=2, sticky='nsew')
         batting_widgets.append(ball_type_frame)
-        button_images.append(pull_shot)
+        button_images_bat.append(pull_shot)
 
-        bat_btns_frame.grid(row=3, column=1, padx=20, pady=40, columnspan=3, sticky='nsew')
+        bat_img = Image.open(r'images\game\bat_buttons\bat.png')
+        bat_image = ImageTk.PhotoImage(bat_img)
+        bat_label = tk.Label(bat_btns_frame, image=bat_image, background='#FFE9CD', highlightbackground="#DEB887", highlightthickness=3)
+        bat_label.grid(row=0, column=1, sticky='nsew', pady=20)
+        batting_widgets.append(bat_label)
+        button_images_bat.append(bat_image)
+
+        bat_btns_frame.grid(row=3, column=1, sticky='nsew')
         batting_widgets.append(bat_btns_frame)
 
 
     def bowling():
         balls_bowled = 0
         bat_type = '--'
-        bowling_widgets = []
 
         # If it's the start of the bowling phase
         current_batsman = computer_batting_order[0][0]
@@ -569,9 +609,10 @@ def start_game(bat_or_bowl, selected_players, overs, username):
             return bat_type
         
         bat_type = get_bat_type()
+        button_images_ball = []  # To prevent garbage collection of button images
 
-        def bowl_ball():
-            nonlocal player_batting_order, computer_batting_order, runs_pc, run_rate_pc, balls_bowled, Batting_Average_pc, run_rate, current_batsman, current_bowler,current_bowler_rating, innings_completed, bat_type, wickets, runs, economy, Batting_Average, Batting_Overs, Bowling_Overs, Total_Overs
+        def bowl_ball(ball_type):
+            nonlocal button_images_ball, player_batting_order, computer_batting_order, runs_pc, run_rate_pc, balls_bowled, Batting_Average_pc, run_rate, current_batsman, current_bowler,current_bowler_rating, innings_completed, bat_type, wickets, runs, economy, Batting_Average, Batting_Overs, Bowling_Overs, Total_Overs
 
             def bat_now():
 
@@ -596,7 +637,7 @@ def start_game(bat_or_bowl, selected_players, overs, username):
                         Total_Overs = float(overs)
                         economy = float(runs_pc / Bowling_Overs)
                         Batting_Average_pc = float(runs_pc / Bowling_Overs)
-                        save_data(wickets, runs, economy, innings_completed, Batting_Average, Batting_Overs, Bowling_Overs, Total_Overs)
+                        save_data(runs_pc, wickets, runs, economy, innings_completed, Batting_Average, Batting_Overs, Bowling_Overs, Total_Overs)
                         clear_widgets(bowling_widgets)
                         tk.messagebox.showinfo("Game Over", "The game has ended. Thanks for playing!")
                         show_final_scores(player_batting_order, computer_batting_order)
@@ -617,7 +658,7 @@ def start_game(bat_or_bowl, selected_players, overs, username):
                             Total_Overs = float(overs)
                             economy = float(runs_pc / Bowling_Overs)
                             Batting_Average_pc = float(runs_pc / Bowling_Overs)
-                            save_data(wickets, runs, economy, innings_completed, Batting_Average, Batting_Overs, Bowling_Overs, Total_Overs)
+                            save_data(runs_pc, wickets, runs, economy, innings_completed, Batting_Average, Batting_Overs, Bowling_Overs, Total_Overs)
                             clear_widgets(bowling_widgets)
                             tk.messagebox.showinfo("Game Over", "The game has ended. Thanks for playing!")
                             show_final_scores(player_batting_order, computer_batting_order)
@@ -630,7 +671,7 @@ def start_game(bat_or_bowl, selected_players, overs, username):
             try:
 
                 # User selects ball type
-                selected_ball_type = ball_type_var.get()
+                selected_ball_type = ball_type
                 balls_bowled += 1
 
                 # Scale the rating to influence the probability (90+ gives a higher probability of success)
@@ -654,7 +695,7 @@ def start_game(bat_or_bowl, selected_players, overs, username):
                             economy = runs_pc / Bowling_Overs
                             Total_Overs = float(overs)
                             Batting_Average_pc = float(runs_pc / Bowling_Overs)
-                            save_data(wickets, runs, economy, innings_completed, Batting_Average, Batting_Overs, Bowling_Overs, Total_Overs)
+                            save_data(runs_pc, wickets, runs, economy, innings_completed, Batting_Average, Batting_Overs, Bowling_Overs, Total_Overs)
                             clear_widgets(bowling_widgets)
                             tk.messagebox.showinfo("Game Over", "The game has ended. Thanks for playing!")
                             show_final_scores(player_batting_order, computer_batting_order)
@@ -683,23 +724,66 @@ def start_game(bat_or_bowl, selected_players, overs, username):
                 # Get next bat type
                 bat_type = get_bat_type()
 
-                # Disable Bowl button for 3 seconds
-                bowl_button.config(state=tk.DISABLED)
-                game.after(2000, lambda: bowl_button.config(state=tk.NORMAL))
+                # Disable all Ball buttons for 2 seconds
+                for btn_name in [fast_btn, spin_btn, swing_btn, bouncer_btn, yorker_btn]:
+                    btn_name.config(state=tk.DISABLED)
+                
+                # After 2 seconds, re-enable all Ball buttons
+                game.after(2000, lambda: [btn_name.config(state=tk.NORMAL) for btn_name in [fast_btn, spin_btn, swing_btn, bouncer_btn, yorker_btn]])
             
             except tk.TclError:
                 pass
 
-        # Drop-down to select ball type
-        ball_type_var = tk.StringVar()
-        ball_type_dropdown = Combobox(game, textvariable=ball_type_var, values=ball_types, state="readonly", font=('calibre', 20, 'bold'))
-        ball_type_dropdown.grid(row=3, column=1)
-        bowling_widgets.append(ball_type_dropdown)
+        # Ball buttons
+        ball_btns_frame = tk.Frame(game)
+        ball_btns_frame.config(background='#FFB19D', highlightbackground="black", highlightthickness=3)
 
-        # Button to simulate bowling a ball
-        bowl_button = tk.Button(game, text="Bowl", command=bowl_ball, font=('calibre', 20, 'bold'))
-        bowl_button.grid(row=4, column=1)
-        bowling_widgets.append(bowl_button)
+        fast_ball_img = Image.open(r'images\game\ball_buttons\fast.png')
+        fast_ball = ImageTk.PhotoImage(fast_ball_img)
+        fast_btn = tk.Button(ball_btns_frame, image=fast_ball, background='#FFB19D', command=lambda: bowl_ball('fast'), borderwidth=0, activebackground='light grey')
+        fast_btn.grid(row=0, column=0, sticky='nsew', pady=20, padx=5)
+        bowling_widgets.append(ball_btns_frame)
+        button_images_ball.append(fast_ball)
+
+        spin_ball_img = Image.open(r'images\game\ball_buttons\spin.png')
+        spin_ball = ImageTk.PhotoImage(spin_ball_img)
+        spin_btn = tk.Button(ball_btns_frame, image=spin_ball, background='#FFB19D', command=lambda: bowl_ball('spin'), borderwidth=0, activebackground='light grey')
+        spin_btn.grid(row=0, column=2, sticky='nsew', pady=20, padx=5)
+        bowling_widgets.append(ball_btns_frame)
+        button_images_ball.append(spin_ball)
+
+        swing_ball_img = Image.open(r'images\game\ball_buttons\swing.png')
+        swing_ball = ImageTk.PhotoImage(swing_ball_img)
+        swing_btn = tk.Button(ball_btns_frame, image=swing_ball, background='#FFB19D', command=lambda: bowl_ball('swing'), borderwidth=0, activebackground='light grey')
+        swing_btn.grid(row=1, column=1, sticky='nsew', padx=5)
+        bowling_widgets.append(ball_btns_frame)
+        button_images_ball.append(swing_ball)
+
+        bouncer_ball_img = Image.open(r'images\game\ball_buttons\bouncer.png')
+        bouncer_ball = ImageTk.PhotoImage(bouncer_ball_img)
+        bouncer_btn = tk.Button(ball_btns_frame, image=bouncer_ball, background='#FFB19D', command=lambda: bowl_ball('bouncer'), borderwidth=0, activebackground='light grey')
+        bouncer_btn.grid(row=1, column=0, sticky='nsew', padx=5)
+        bowling_widgets.append(ball_btns_frame)
+        button_images_ball.append(bouncer_ball)
+
+        yorker_ball_img = Image.open(r'images\game\ball_buttons\yorker.png')
+        yorker_ball = ImageTk.PhotoImage(yorker_ball_img)
+        yorker_btn = tk.Button(ball_btns_frame, image=yorker_ball, background='#FFB19D', command=lambda: bowl_ball('yorker'), borderwidth=0, activebackground='light grey')
+        yorker_btn.grid(row=1, column=2, sticky='nsew', padx=5)
+        bowling_widgets.append(ball_btns_frame)
+        button_images_ball.append(yorker_ball)
+
+        ball_img = Image.open(r'images\game\ball_buttons\bowling.png')
+        ball_image = ImageTk.PhotoImage(ball_img)
+        ball_label = tk.Label(ball_btns_frame, image=ball_image, background='#FFE9CD', highlightbackground="#D43D1A", highlightthickness=3)
+        ball_label.grid(row=0, column=1, sticky='nsew', pady=20, padx=5)
+        bowling_widgets.append(ball_label)
+        button_images_ball.append(ball_image)
+
+        ball_btns_frame.grid(row=3, column=1, sticky='nsew')
+        bowling_widgets.append(ball_btns_frame)
+
+
 
     if bat_or_bowl == 'bat':
         batting()

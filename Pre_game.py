@@ -8,7 +8,7 @@ import random
 def pre_game(username, name, overs):
     pre_game = tk.Tk()
     pre_game.title("Quicket-Singleplayer")
-    pre_game.geometry('470x190')
+    pre_game.geometry('350x220')
     pre_game.resizable(False, False)
     pre_game.configure(background='light grey')
     p1 = tk.PhotoImage(file=r'images\home\quicket.png')
@@ -209,10 +209,9 @@ def pre_game(username, name, overs):
 
     choice_var = tk.StringVar()
 
-    def toss_outcome():
+    def toss_outcome(choice):
         global bat_or_bowl
         
-        choice = choice_var.get()
         toss = random.choice(toss_list)
         print(f'User chose: {choice}')
         print(f'Toss result: {toss}')
@@ -223,12 +222,11 @@ def pre_game(username, name, overs):
             toss_status = 'cannot_choose'
             bat_or_bowl = toss_handle(toss_status)
 
-        # Destroy the selection box and button after the toss
+        # Destroy the toss widgets
         choice_entry_label.destroy()
-        choice_dropdown.destroy()
-        choose_button.destroy()
+        btn_frame.destroy()
 
-        # bat_or_bowl = 'bowl' # For testing purposes
+        #bat_or_bowl = 'bat' # For testing purposes
         print(f"User is {bat_or_bowl}ing")
         players_select()
 
@@ -252,13 +250,19 @@ def pre_game(username, name, overs):
     choice_entry_label = tk.Label(toss_frame, text='Choose heads or tails:', font=('calibre', 20, 'bold'), background='#FFE4E1')
     choice_entry_label.grid(row=0, column=0, sticky='nsew', pady=10, padx=10)
 
-    toss_list = ['heads', 'tails']
-    choice_dropdown = Combobox(toss_frame, textvariable=choice_var, values=toss_list, state="readonly", font=('calibre', 19, 'bold'), background='#FFE4E1')
-    choice_dropdown.grid(row=1, column=0, sticky='nsew', pady=10, padx=10)
+    btn_frame = tk.Frame(toss_frame, background='#FFE4E1')
+    btn_frame.grid(row=1, column=0, sticky='nsew', pady=5, padx=5)
 
-    choose = tk.PhotoImage(file=r'images\pre_game\tick.png')
-    choose_button = tk.Button(toss_frame, image=choose, command=toss_outcome, borderwidth=0, background='#FFE4E1')
-    choose_button.grid(row=1, column=1, pady=10)
+    toss_list = ['heads', 'tails']
+    heads_image = Image.open(r'images\pre_game\heads.png')
+    heads_img = ImageTk.PhotoImage(heads_image)
+    heads_btn = tk.Button(btn_frame, image=heads_img, background='#FFE4E1', command=lambda: toss_outcome('heads'), borderwidth=0, activebackground='light grey')
+    heads_btn.grid(row=0, column=0, sticky='nsew', pady=10, padx=10)
+
+    tails_image = Image.open(r'images\pre_game\tails.png')
+    tails_img = ImageTk.PhotoImage(tails_image)
+    tails_btn = tk.Button(btn_frame, image=tails_img, background='#FFE4E1', command=lambda: toss_outcome('tails'), borderwidth=0, activebackground='light grey')
+    tails_btn.grid(row=0, column=1, sticky='nsew', pady=10, padx=10)
 
     pre_game.mainloop()
 

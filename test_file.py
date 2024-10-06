@@ -8,7 +8,7 @@ import csv
 
 game = tk.Tk()
 game.title(f"Quicket - Cricket Scorecard")
-game.geometry('1100x600')
+game.geometry('1100x620')
 game.resizable(False, False)
 p1 = tk.PhotoImage(file=r'images\home\quicket.png')
 game.iconphoto(True, p1)
@@ -65,7 +65,7 @@ def show_final_scores(player_batting_order, computer_batting_order):
                             self.e = tk.Label(root, width=20, height=3, foreground='white', background='dark grey',
                                               font=('Arial', 20, 'bold'), anchor='w', padx=10)
                         elif i == 1:  # For the row with the win/loss messages
-                            self.e = tk.Label(root, width=20, height=2, wraplength=300, background='#F08080',
+                            self.e = tk.Label(root, width=20, height=3, wraplength=300, background='#F08080',
                                               font=('Arial', 16, 'bold'), anchor='w', padx=10)
                         else:
                             self.e = tk.Label(root, width=20, height=2, background=colour, font=('Arial', 16), anchor='w', padx=10)
@@ -80,13 +80,14 @@ def show_final_scores(player_batting_order, computer_batting_order):
 
 
 
-runs, runs_pc = 250, 230
+
+runs, runs_pc = 210, 230
 run_rate, run_rate_pc = 5.5, 4.8
 wickets, wickets_pc = 6, 9
 economy, economy_pc = 4.5, 5.0
 Batting_Average, Batting_Average_pc = 40.0, 35.0
 Batting_Overs, Bowling_Overs, Total_Overs = 50, 50, 50
-bat_or_bowl = 'bowl'
+bat_or_bowl = 'bat'
 player_batting_order = ['Player1', 'Player2', 'Player3', 'Player4', 'Player5', 'Player6']
 computer_batting_order = ['Comp1', 'Comp2', 'Comp3', 'Comp4', 'Comp5']
 
