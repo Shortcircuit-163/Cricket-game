@@ -8,7 +8,6 @@ def start_match_singleplayer(name, username):
 
     sm = tk.Tk()
     sm.title("Quicket-Start Match")
-    sm.geometry('1300x700')
     # sm.resizable(False, False)
     sm.configure(background='light grey')
     p1 = tk.PhotoImage(file=r'images\home\quicket.png')

@@ -242,7 +242,7 @@ def start_game(bat_or_bowl, selected_players, overs, username, name):
             # Logic to reset game state or return to main menu
             msg = 'Choose to continue playing or quit the game.'
             top = tk.Toplevel(game)
-            top.title("Toss result")
+            top.title("Game Over")
             top.geometry("350x150")
 
             message = tk.Label(top, text=msg)
