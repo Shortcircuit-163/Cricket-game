@@ -200,7 +200,7 @@ def start_game(bat_or_bowl, selected_players, overs, username, name):
 
                 for i in rows:
                     if i[1] == username:
-                        i[3] = float(i[3]) + earnings
+                        i[3] = int(i[3]) + int(earnings)
                         i[8] = int(i[8]) + wickets
                         i[9] = int(i[9]) + runs
                         i[10] = round((float(i[10]) + float(economy)) / (float(i[14]) + float(Bowling_Overs)), 2)
